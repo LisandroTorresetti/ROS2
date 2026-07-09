@@ -9,6 +9,7 @@
 using std::placeholders::_1;
 
 static const std::string nodeName = "counter_subscriber";
+static const std::string max_counter_value_param_name = "max_counter_value";
 
 class CounterSubscriber : public rclcpp::Node {
 
@@ -17,9 +18,13 @@ class CounterSubscriber : public rclcpp::Node {
         subscription_ = this->create_subscription<std_msgs::msg::Int32>(
           COUNTER_TOPIC_NAME, 10, std::bind(&CounterSubscriber::topic_callback, this, _1));
 
-        reset_client_ = this->create_client<std_srvs::srv::Empty>("reset_counter");
+        reset_client_ = this->create_client<std_srvs::srv::Empty>(RESET_ENDPOINT);
 
-        max_counter_value_ = 50;
+        this->declare_parameter<int32_t>(max_counter_value_param_name, 25);
+        max_counter_value_ = this->get_parameter(max_counter_value_param_name).as_int();
+
+        RCLCPP_INFO(this->get_logger(), "Max counter value is: %d", max_counter_value_);
+
         counter_ = 0;
     }
 

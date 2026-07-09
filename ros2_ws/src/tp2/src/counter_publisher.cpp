@@ -12,15 +12,25 @@ using namespace std::chrono_literals;
 
 static const std::string nodeName = "counter_publisher";
 
+static const std::string publish_rate_param_name = "publish_rate";
+static const std::string max_counter_value_param_name = "max_counter_value";
+
 class CounterPublisher : public rclcpp::Node {
 public:
     CounterPublisher(): Node(nodeName) {
-        publisher_ = this->create_publisher<std_msgs::msg::Int32>(COUNTER_TOPIC_NAME, 10);
-        timer_ = this->create_wall_timer(200ms, std::bind(&CounterPublisher::timer_callback, this)); // TODO: make frequency updatable
-        count_ = 0;
+        this->declare_parameter<int64_t>(publish_rate_param_name, 200);
+        int64_t publish_rate = this->get_parameter(publish_rate_param_name).as_int();
+        std::chrono::milliseconds publish_rate_ms(publish_rate);
 
+        this->declare_parameter<int32_t>(max_counter_value_param_name, 256);
+        max_counter_value_ = this->get_parameter(max_counter_value_param_name).as_int();
+
+        publisher_ = this->create_publisher<std_msgs::msg::Int32>(COUNTER_TOPIC_NAME, 10);
+        timer_ = this->create_wall_timer(publish_rate_ms, std::bind(&CounterPublisher::timer_callback, this)); // TODO: make frequency updatable
+
+        count_ = 0;
         reset_service_ = this->create_service<std_srvs::srv::Empty>(
-            "reset_counter",
+            RESET_ENDPOINT,
             std::bind(&CounterPublisher::reset_counter_callback, this, std::placeholders::_1, std::placeholders::_2));
     }
 
@@ -48,6 +58,7 @@ private:
     rclcpp::Publisher<std_msgs::msg::Int32>::SharedPtr publisher_;
     rclcpp::Service<std_srvs::srv::Empty>::SharedPtr reset_service_;
     int32_t count_;
+    int32_t max_counter_value_;
 };
 
 int main(int argc, char * argv[]) {
