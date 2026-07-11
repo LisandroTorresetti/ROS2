@@ -10,6 +10,8 @@ find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(std_srvs REQUIRED)
+find_package(rclcpp_action REQUIRED)
+find_package(rclcpp_components REQUIRED)
 
 find_package(rosidl_default_generators REQUIRED)
 
@@ -28,14 +30,16 @@ add_executable(listener src/counter_subscriber.cpp)
 ament_target_dependencies(listener rclcpp std_msgs std_srvs)
 
 add_executable(actionserver src/action_server.cpp)
-ament_target_dependencies(actionserver rclcpp std_msgs std_srvs)
+ament_target_dependencies(actionserver rclcpp rclcpp_action rclcpp_components std_msgs std_srvs)
 
 add_executable(textpublisher src/action_client.cpp)
 ament_target_dependencies(textpublisher rclcpp std_msgs std_srvs)
 
 install(TARGETS
-  talker
-  listener
+        talker
+        listener
+        actionserver
+        textpublisher
   DESTINATION lib/${PROJECT_NAME})
 
 ament_package()
