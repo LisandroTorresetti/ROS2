@@ -30,10 +30,10 @@ add_executable(listener src/counter_subscriber.cpp)
 ament_target_dependencies(listener rclcpp std_msgs std_srvs)
 
 add_executable(actionserver src/action_server.cpp)
-ament_target_dependencies(actionserver rclcpp rclcpp_action rclcpp_components std_msgs std_srvs)
+ament_target_dependencies(actionserver rclcpp rclcpp_action rclcpp_components std_msgs std_srvs action_msgs)
 
 add_executable(textpublisher src/action_client.cpp)
-ament_target_dependencies(textpublisher rclcpp std_msgs std_srvs)
+ament_target_dependencies(textpublisher rclcpp rclcpp_action rclcpp_components std_msgs std_srvs action_msgs)
 
 install(TARGETS
         talker

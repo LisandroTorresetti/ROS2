@@ -1,6 +1,7 @@
-#include "../../../build/tp2/rosidl_generator_cpp/tp2/action/detail/split_text__struct.hpp"
+//#include "../../../build/tp2/rosidl_generator_cpp/tp2/action/detail/split_text__struct.hpp"
 #include "rclcpp/rclcpp.hpp"
 #include "rclcpp_action/rclcpp_action.hpp"
+#include "tp2/action/split_text.hpp"
 
 using namespace std::placeholders;
 
@@ -8,7 +9,7 @@ static const std::string node_name = "action_server";
 static const std::string action_server_endpoint = "split_text";
 
 class TextSplitterService : public rclcpp::Node {
-    public:
+public:
     using SplitText = tp2::action::SplitText;
     using GoalHandleSplitText = rclcpp_action::ServerGoalHandle<SplitText>;
 
