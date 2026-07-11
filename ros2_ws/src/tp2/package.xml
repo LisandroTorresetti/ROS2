@@ -4,7 +4,7 @@
   <name>tp2</name>
   <version>0.0.0</version>
   <description>Examples of minimal publisher/subscriber using rclcpp</description>
-  <maintainer email="lisandrotorresetti@gmail.com">ltorresetti</maintainer>
+  <maintainer email="somemeail">x</maintainer>
   <license>Apache-2.0</license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
