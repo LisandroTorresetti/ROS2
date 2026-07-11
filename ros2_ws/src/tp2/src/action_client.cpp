@@ -7,6 +7,7 @@ using namespace std::placeholders;
 
 static const std::string node_name = "action_client";
 static const std::string action_server_endpoint = "split_text";
+static const std::string text_param_name = "text";
 
 class TextSplitterClient: public rclcpp::Node {
 public:
@@ -14,6 +15,10 @@ public:
     using GoalHandleSplitText = rclcpp_action::ClientGoalHandle<SplitText>;
 
     TextSplitterClient(): Node(node_name) {
+        this->declare_parameter<std::string>(text_param_name, "hola que tal tu como estas? dime si eres feliz");
+        text_ = this->get_parameter(text_param_name).as_string();
+
+
         this->client_ptr_ = rclcpp_action::create_client<SplitText>(this, action_server_endpoint);
 
         this->timer_ = this->create_wall_timer(
@@ -24,6 +29,7 @@ public:
 private:
     rclcpp_action::Client<SplitText>::SharedPtr client_ptr_;
     rclcpp::TimerBase::SharedPtr timer_;
+    std::string text_;
 
     void send_goal() {
         using namespace std::placeholders;
@@ -37,7 +43,7 @@ private:
         }
 
         SplitText::Goal goal;
-        goal.text = "hola que tal tu como estas? dime si eres feliz";
+        goal.text = text_;
         RCLCPP_INFO(this->get_logger(), "Republicando: %s", goal.text.c_str());
 
         auto send_goal_options = rclcpp_action::Client<SplitText>::SendGoalOptions();
@@ -61,12 +67,8 @@ private:
 
     void feedback_callback(
         GoalHandleSplitText::SharedPtr,
-        const std::shared_ptr<const SplitText::Feedback> feedback)
+        const std::shared_ptr<const SplitText::Feedback>)
     {
-        RCLCPP_INFO(
-            this->get_logger(),
-            "Word: %s",
-            feedback->word.c_str());
     }
 
     void result_callback(
@@ -77,7 +79,7 @@ private:
             case rclcpp_action::ResultCode::SUCCEEDED:
                 RCLCPP_INFO(
                     this->get_logger(),
-                    "Result: %s",
+                    "%s",
                     result.result->eof_msg.c_str());
                 break;
 

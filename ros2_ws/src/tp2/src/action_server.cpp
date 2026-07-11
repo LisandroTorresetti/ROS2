@@ -71,6 +71,10 @@ private:
 
         result->eof_msg = "Texto republicado!";
         goal_handle->succeed(result);
+        RCLCPP_INFO(
+            this->get_logger(),
+            "%s",
+            result->eof_msg.c_str());
     }
 };
 

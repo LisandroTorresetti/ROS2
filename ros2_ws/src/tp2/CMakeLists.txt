@@ -12,12 +12,18 @@ find_package(std_msgs REQUIRED)
 find_package(std_srvs REQUIRED)
 find_package(rclcpp_action REQUIRED)
 find_package(rclcpp_components REQUIRED)
+find_package(action_msgs REQUIRED)
 
 find_package(rosidl_default_generators REQUIRED)
 
 rosidl_generate_interfaces(${PROJECT_NAME}
         "action/SplitText.action"
+        DEPENDENCIES action_msgs
 )
+
+rosidl_get_typesupport_target(cpp_typesupport_target
+        ${PROJECT_NAME}
+        "rosidl_typesupport_cpp")
 
 # uncomment the following section in order to fill in
 # further dependencies manually.
@@ -30,10 +36,24 @@ add_executable(listener src/counter_subscriber.cpp)
 ament_target_dependencies(listener rclcpp std_msgs std_srvs)
 
 add_executable(actionserver src/action_server.cpp)
-ament_target_dependencies(actionserver rclcpp rclcpp_action rclcpp_components std_msgs std_srvs action_msgs)
+ament_target_dependencies(actionserver rclcpp rclcpp_action rclcpp_components std_msgs std_srvs)
 
 add_executable(textpublisher src/action_client.cpp)
-ament_target_dependencies(textpublisher rclcpp rclcpp_action rclcpp_components std_msgs std_srvs action_msgs)
+ament_target_dependencies(textpublisher rclcpp rclcpp_action rclcpp_components std_msgs std_srvs)
+
+target_link_libraries(actionserver
+        "${cpp_typesupport_target}"
+)
+
+target_link_libraries(textpublisher
+        "${cpp_typesupport_target}"
+)
+
+add_dependencies(actionserver
+        ${PROJECT_NAME}__rosidl_generator_cpp)
+
+add_dependencies(textpublisher
+        ${PROJECT_NAME}__rosidl_generator_cpp)
 
 install(TARGETS
         talker
