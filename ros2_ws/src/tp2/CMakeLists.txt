@@ -10,6 +10,13 @@ find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(std_srvs REQUIRED)
+
+find_package(rosidl_default_generators REQUIRED)
+
+rosidl_generate_interfaces(${PROJECT_NAME}
+        "action/SplitText.action"
+)
+
 # uncomment the following section in order to fill in
 # further dependencies manually.
 # find_package(<dependency> REQUIRED)
@@ -20,8 +27,7 @@ ament_target_dependencies(talker rclcpp std_msgs std_srvs)
 add_executable(listener src/counter_subscriber.cpp)
 ament_target_dependencies(listener rclcpp std_msgs std_srvs)
 
-add_executable(actionserver src/action_server.cpp
-        src/action_client.cpp)
+add_executable(actionserver src/action_server.cpp)
 ament_target_dependencies(actionserver rclcpp std_msgs std_srvs)
 
 add_executable(textpublisher src/action_client.cpp)
