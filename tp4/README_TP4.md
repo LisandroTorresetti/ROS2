@@ -76,5 +76,5 @@ El resultado se puede observar a continuación:
 
 Y en el siguiente GIF, se puede ver el movimiento del robot implementado
 
-![Resultado](pics/demo_tp4.png)
+![Resultado](pics/demo_tp4.gif)
 
