@@ -63,7 +63,7 @@
       </collision>
   </link>
 
-  <!-- Tercer link: cilindro - brazo -->
+  <!-- cilindro - brazo -->
   <link name="link3">
       <visual>
           <origin xyz="0 0 0"/>
@@ -82,7 +82,6 @@
       </collision>
   </link>
 
-  <!-- Tercer link: brazo - rotacion -->
   <link name="link4">
       <visual>
           <origin xyz="0 0 0"/>
@@ -127,7 +126,7 @@
       <limit effort="1000" lower="-3.14" upper="3.14" velocity="5"/>
   </joint>
 
-  <!-- Junta entre link2 y link3 -->
+    <!-- Junta entre link2 y link3 -->
   <joint name="joint3" type="prismatic">
       <parent link="link2"/>
       <child link="link3"/>
