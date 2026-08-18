@@ -1,0 +1,38 @@
+tp-final/package.xml
+  s_eb3a3cfd942ca4::t_7906ed8c5dc306 1-46
+tp-final/README_TP_FINAL.md
+  s_eb3a3cfd942ca4::t_e2176ffdea87b0 123-124
+  s_eb3a3cfd942ca4::t_f28a4b621054ea 18-19,22-23
+  s_eb3a3cfd942ca4::t_8f58111216ee43 228-231
+  s_eb3a3cfd942ca4::t_5a4bb06b0753a8 47,49-51,53-54,56-57,60-61,63,65-67,69-71,73-75,78-79,83,85-86,88-91,93-94,96-97,100
+tp-final/mycobot_320_m5_2022.xacro
+  s_eb3a3cfd942ca4::t_c35c34c2489f36 23,28-34,36
+  s_eb3a3cfd942ca4::t_7fdbe6c13f6cb2 86,92,104,111,124,130,142,148,160,166,178,196,202,273,279,291,297,309,315,327,333,345,351,363,369,381,387
+tp-final/launch/tp_final.launch.xml
+  s_eb3a3cfd942ca4::t_00a06aa32e0e8f 5,10,21
+tp-final/CMakeLists.txt
+  s_eb3a3cfd942ca4::t_5800c98b83bc83 1-38
+tp-final/launch/moveit.launch.xml
+  s_eb3a3cfd942ca4::t_00a06aa32e0e8f 6-7,17,23
+tp-final/launch/pregrasp_demo.launch.xml
+  s_eb3a3cfd942ca4::t_00a06aa32e0e8f 7,10,17,30,38
+tp-final/launch/gazebo.launch.xml
+  s_eb3a3cfd942ca4::t_00a06aa32e0e8f 7-8,20,29
+  s_eb3a3cfd942ca4::t_c3b10e704b439e 33-39
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "80329c814eb7148f52cebe2670de69b99ebfa319",
+  "prompts": {},
+  "sessions": {
+    "s_eb3a3cfd942ca4": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "e80b007c-4a2f-4d28-b91f-0884dd0bd29d",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Ignacio Carol Lugones <ilugones@bigid.com>"
+    }
+  }
+}
