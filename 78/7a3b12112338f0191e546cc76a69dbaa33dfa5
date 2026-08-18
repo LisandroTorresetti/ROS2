@@ -1,0 +1,28 @@
+tp-final/adaptive_gripper/mycobot_adaptive_gripper.urdf
+  s_114fca8f5c2f32::t_068236d3af3505 5-9,25-29,45-49,65-69,85-89,105-109,125-129
+tp-final/mycobot_320_m5_2022.xacro
+  s_114fca8f5c2f32::t_d3792315e354a9 334-335
+  s_114fca8f5c2f32::t_e868ba0d6d9b9c 316-317
+  s_114fca8f5c2f32::t_b7b97e3d0ba6ad 18-19
+  s_114fca8f5c2f32::t_fc65e223b2e7c6 226-227
+  s_114fca8f5c2f32::t_b6f0ec31681925 280-281
+  s_114fca8f5c2f32::t_5a009f9f819647 262-263
+  s_114fca8f5c2f32::t_10faed15f59ca0 244-245
+  s_114fca8f5c2f32::t_a3ebdcbc5e8623 298-299
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "787a3b12112338f0191e546cc76a69dbaa33dfa5",
+  "prompts": {},
+  "sessions": {
+    "s_114fca8f5c2f32": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "66764dbc-3e75-4476-855c-3af026498965",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Ignacio Carol Lugones <ilugones@bigid.com>"
+    }
+  }
+}
