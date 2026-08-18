@@ -2,6 +2,11 @@
 <robot  xmlns:xacro="http://www.ros.org/wiki/xacro" name="adaptive_gripper" >
 	
   <link name="gripper_base">
+    <inertial>
+      <origin xyz="0.0 0 -0.012" rpy="0 0 0"/>
+      <mass value="0.03"/>
+      <inertia ixx="0.00001" ixy="0.0" ixz="0.0" iyy="0.00001" iyz="0.0" izz="0.00001"/>
+    </inertial>
     <visual>
       <geometry>
       <mesh filename="package://clase4/robot_description/adaptive_gripper/gripper_base.dae"/>
@@ -17,6 +22,11 @@
   </link>
 
   <link name="gripper_left1">
+    <inertial>
+      <origin xyz="0.039 -0.0133 -0.012" rpy="0 0 0"/>
+      <mass value="0.008"/>
+      <inertia ixx="0.000002" ixy="0.0" ixz="0.0" iyy="0.000002" iyz="0.0" izz="0.000002"/>
+    </inertial>
     <visual>
       <geometry>
       <mesh filename="package://clase4/robot_description/adaptive_gripper/gripper_left1.dae"/>
@@ -32,6 +42,11 @@
   </link>
 
   <link name="gripper_left2">
+    <inertial>
+      <origin xyz="0.005 -0.0195 -0.012" rpy="0 0 0"/>
+      <mass value="0.008"/>
+      <inertia ixx="0.000002" ixy="0.0" ixz="0.0" iyy="0.000002" iyz="0.0" izz="0.000002"/>
+    </inertial>
     <visual>
       <geometry>
       <mesh filename="package://clase4/robot_description/adaptive_gripper/gripper_left2.dae"/>
@@ -47,6 +62,11 @@
   </link>
 
   <link name="gripper_left3">
+    <inertial>
+      <origin xyz="0.012 0.0025 -0.012" rpy="0 0 0"/>
+      <mass value="0.008"/>
+      <inertia ixx="0.000002" ixy="0.0" ixz="0.0" iyy="0.000002" iyz="0.0" izz="0.000002"/>
+    </inertial>
     <visual>
       <geometry>
       <mesh filename="package://clase4/robot_description/adaptive_gripper/gripper_left3.dae"/>
@@ -62,6 +82,11 @@
   </link>
 
   <link name="gripper_right1">
+    <inertial>
+      <origin xyz="-0.039 -0.0133 -0.012" rpy="0 0 0"/>
+      <mass value="0.008"/>
+      <inertia ixx="0.000002" ixy="0.0" ixz="0.0" iyy="0.000002" iyz="0.0" izz="0.000002"/>
+    </inertial>
     <visual>
       <geometry>
       <mesh filename="package://clase4/robot_description/adaptive_gripper/gripper_right1.dae"/>
@@ -77,6 +102,11 @@
   </link>
 
   <link name="gripper_right2">
+    <inertial>
+      <origin xyz="-0.005 -0.0195 -0.012" rpy="0 0 0"/>
+      <mass value="0.008"/>
+      <inertia ixx="0.000002" ixy="0.0" ixz="0.0" iyy="0.000002" iyz="0.0" izz="0.000002"/>
+    </inertial>
     <visual>
       <geometry>
       <mesh filename="package://clase4/robot_description/adaptive_gripper/gripper_right2.dae"/>
@@ -92,6 +122,11 @@
   </link>
 
   <link name="gripper_right3">
+    <inertial>
+      <origin xyz="-0.012 0.0025 -0.012" rpy="0 0 0"/>
+      <mass value="0.008"/>
+      <inertia ixx="0.000002" ixy="0.0" ixz="0.0" iyy="0.000002" iyz="0.0" izz="0.000002"/>
+    </inertial>
     <visual>
       <geometry>
       <mesh filename="package://clase4/robot_description/adaptive_gripper/gripper_right3.dae"/>

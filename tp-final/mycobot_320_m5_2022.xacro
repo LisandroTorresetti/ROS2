@@ -15,6 +15,8 @@
   <xacro:property name="link5_mass" value="0.11" />
   <xacro:property name="link6_mass" value="0.0739" />
   <xacro:property name="flange_mass" value="0.035" />
+  <xacro:property name="gripper_base_mass" value="0.03" />
+  <xacro:property name="gripper_finger_mass" value="0.008" />
 
   <xacro:macro name="link_inertial" params="xg yg zg mass ixx iyy izz">
     <inertial>
@@ -221,6 +223,8 @@
 
 
   <link name="gripper_base">
+    <xacro:link_inertial xg="0" yg="0" zg="-0.012" mass="${gripper_base_mass}" ixx="0.00001"
+      iyy="0.00001" izz="0.00001" />
     <visual>
       <geometry>
       <mesh filename="package://clase5/robot_description/adaptive_gripper/gripper_base.dae"/>
@@ -237,6 +241,8 @@
 
 
   <link name="gripper_left1">
+    <xacro:link_inertial xg="0.039" yg="-0.0133" zg="-0.012" mass="${gripper_finger_mass}"
+      ixx="0.000002" iyy="0.000002" izz="0.000002" />
     <visual>
       <geometry>
       <mesh filename="package://clase5/robot_description/adaptive_gripper/gripper_left1.dae"/>
@@ -253,6 +259,8 @@
 
 
   <link name="gripper_left2">
+    <xacro:link_inertial xg="0.005" yg="-0.0195" zg="-0.012" mass="${gripper_finger_mass}"
+      ixx="0.000002" iyy="0.000002" izz="0.000002" />
     <visual>
       <geometry>
       <mesh filename="package://clase5/robot_description/adaptive_gripper/gripper_left2.dae"/>
@@ -269,6 +277,8 @@
 
 
   <link name="gripper_left3">
+    <xacro:link_inertial xg="0.012" yg="0.0025" zg="-0.012" mass="${gripper_finger_mass}"
+      ixx="0.000002" iyy="0.000002" izz="0.000002" />
     <visual>
       <geometry>
       <mesh filename="package://clase5/robot_description/adaptive_gripper/gripper_left3.dae"/>
@@ -285,6 +295,8 @@
 
 
   <link name="gripper_right1">
+    <xacro:link_inertial xg="-0.039" yg="-0.0133" zg="-0.012" mass="${gripper_finger_mass}"
+      ixx="0.000002" iyy="0.000002" izz="0.000002" />
     <visual>
       <geometry>
       <mesh filename="package://clase5/robot_description/adaptive_gripper/gripper_right1.dae"/>
@@ -301,6 +313,8 @@
 
 
   <link name="gripper_right2">
+    <xacro:link_inertial xg="-0.005" yg="-0.0195" zg="-0.012" mass="${gripper_finger_mass}"
+      ixx="0.000002" iyy="0.000002" izz="0.000002" />
     <visual>
       <geometry>
       <mesh filename="package://clase5/robot_description/adaptive_gripper/gripper_right2.dae"/>
@@ -317,6 +331,8 @@
 
 
   <link name="gripper_right3">
+    <xacro:link_inertial xg="-0.012" yg="0.0025" zg="-0.012" mass="${gripper_finger_mass}"
+      ixx="0.000002" iyy="0.000002" izz="0.000002" />
     <visual>
       <geometry>
       <mesh filename="package://clase5/robot_description/adaptive_gripper/gripper_right3.dae"/>
