@@ -1,6 +1,7 @@
 <?xml version="1.0" ?>
 <sdf version="1.5">
   <model name="Desk">
+    <static>true</static>
     <link name="link">
       <pose>0 0 0 0 0 0</pose>
 
@@ -10,9 +11,25 @@
           </geometry>
         </visual>
 
-        <collision name="collision">
+        <!-- La colision NO usa la malla. desk.obj como trimesh contra los
+             eslabones del robot cae en el colisionador trimesh-trimesh de ODE,
+             que es lento y ademas revienta con "contact hash table bucket
+             overflow" cuando el brazo se apoya encima.
+             Se reemplaza por dos cajas: la tapa (que es lo unico que el brazo
+             llega a tocar) y el cuerpo debajo. Las medidas salen del bounding
+             box de desk.obj: x[-0.2593, 0.2313], y[-0.4218, 0.4218], z[0, 0.552]. -->
+
+        <collision name="tapa">
+          <pose>-0.014 0 0.532 0 0 0</pose>
           <geometry>
-            <mesh><uri>model://Desk/meshes/desk.obj</uri></mesh>
+            <box><size>0.4906 0.8437 0.04</size></box>
+          </geometry>
+        </collision>
+
+        <collision name="cuerpo">
+          <pose>-0.014 0 0.256 0 0 0</pose>
+          <geometry>
+            <box><size>0.4906 0.8437 0.512</size></box>
           </geometry>
         </collision>
 

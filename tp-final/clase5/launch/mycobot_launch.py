@@ -136,10 +136,18 @@ def generate_launch_description():
         ],
     )
 
+    # El controller_manager no es un nodo propio: lo levanta el plugin
+    # gz_ros2_control dentro del proceso de Gazebo, y su loop de update corre
+    # en el hilo de física. Si la física va lenta, los servicios del
+    # controller_manager tardan en responder y el spawner muere con
+    # "Failed to acquire lock in 20 seconds". Por eso el timeout largo.
     joint_state_broadcaster_spawner = Node(
         package='controller_manager',
         executable='spawner',
-        arguments=['joint_state_broadcaster'],
+        arguments=[
+            'joint_state_broadcaster',
+            '--controller-manager-timeout', '120',
+        ],
     )
     # El joint_state_broadcaster se lanza después de que el robot esté creado en Gazebo, porque necesita leer las posiciones de las articulaciones para publicar el estado de las mismas.
     event_launch_joint_state_broadcaster_spawner = RegisterEventHandler(
@@ -157,6 +165,7 @@ def generate_launch_description():
             'joint_trajectory_controller',
             '--param-file',
             os.path.join(pkg_share, 'config', 'mycobot_320_m5_2022', 'ros2_controllers.yaml'),
+            '--controller-manager-timeout', '120',
         ],
     )
 

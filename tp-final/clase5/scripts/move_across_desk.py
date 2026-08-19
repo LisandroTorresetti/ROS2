@@ -15,9 +15,13 @@
 #   Terminal 1:  ros2 launch clase5 mycobot_launch.py
 #   Terminal 2:  ros2 run clase5 move_across_desk.py
 
+import time
+
 import rclpy
 from rclpy.node import Node
 from rclpy.action import ActionClient
+from sensor_msgs.msg import JointState
+from controller_manager_msgs.srv import ListControllers
 from moveit_msgs.action import MoveGroup
 from moveit_msgs.msg import (MotionPlanRequest, WorkspaceParameters,
                              Constraints, PositionConstraint,
@@ -129,11 +133,71 @@ def _objeto_colision(spec):
     return co
 
 
+ARM_JOINTS = ['joint1', 'joint2', 'joint3', 'joint4', 'joint5', 'joint6']
+CONTROLADORES = ['joint_state_broadcaster', 'joint_trajectory_controller']
+
+
 class MoveAcrossDesk(Node):
     def __init__(self):
         super().__init__('move_across_desk')
         self._client = ActionClient(self, MoveGroup, '/move_action')
         self._scene_client = self.create_client(ApplyPlanningScene, '/apply_planning_scene')
+        self._ctrl_client = self.create_client(
+            ListControllers, '/controller_manager/list_controllers')
+        self._ultimo_estado = None
+        self.create_subscription(JointState, '/joint_states', self._cb_joint_states, 10)
+
+    def _cb_joint_states(self, msg):
+        self._ultimo_estado = msg
+
+    # -----------------------------------------------------------------
+    def esperar_controladores(self, timeout=120.0):
+        """Sin controladores activos el brazo se desploma sobre el escritorio y
+        MoveIt rechaza el plan con START_STATE_IN_COLLISION. Mejor detectarlo
+        aca y decirlo claro que mandar un goal condenado."""
+        if not self._ctrl_client.wait_for_service(timeout_sec=timeout):
+            self.get_logger().error(
+                '/controller_manager/list_controllers no aparece. El plugin '
+                'gz_ros2_control no cargo: revisar la terminal de Gazebo.')
+            return False
+
+        fin = time.time() + timeout
+        faltan = list(CONTROLADORES)
+        while time.time() < fin:
+            future = self._ctrl_client.call_async(ListControllers.Request())
+            rclpy.spin_until_future_complete(self, future, timeout_sec=10.0)
+            res = future.result()
+            if res is not None:
+                activos = {c.name for c in res.controller if c.state == 'active'}
+                faltan = [c for c in CONTROLADORES if c not in activos]
+                if not faltan:
+                    self.get_logger().info('Controladores activos: ' + ', '.join(CONTROLADORES))
+                    return True
+            self.get_logger().info(f'Esperando controladores: {faltan}')
+            time.sleep(2.0)
+
+        self.get_logger().error(
+            f'Los controladores {faltan} nunca se activaron. Sin ellos nada sostiene '
+            'el brazo: se cae sobre la mesa y cualquier plan arranca en colision.')
+        return False
+
+    # -----------------------------------------------------------------
+    def esperar_estado(self, timeout=30.0):
+        """Espera a que /joint_states traiga las seis juntas del brazo."""
+        fin = time.time() + timeout
+        while time.time() < fin:
+            rclpy.spin_once(self, timeout_sec=0.5)
+            msg = self._ultimo_estado
+            if msg is not None and all(j in msg.name for j in ARM_JOINTS):
+                pos = {n: p for n, p in zip(msg.name, msg.position)}
+                self.get_logger().info(
+                    'Estado inicial: ' +
+                    ', '.join(f'{j}={pos[j]:+.2f}' for j in ARM_JOINTS))
+                return True
+        self.get_logger().error(
+            '/joint_states no publica las juntas del brazo. move_group va a avisar '
+            '"Failed to fetch current robot state" y planificar desde un estado invalido.')
+        return False
 
     # -----------------------------------------------------------------
     def publicar_escena(self):
@@ -279,6 +343,12 @@ def main():
     rclpy.init()
     node = MoveAcrossDesk()
     try:
+        # El orden importa: primero que el brazo este sostenido y su estado
+        # publicado, recien despues la escena y el movimiento.
+        if not node.esperar_controladores():
+            return
+        if not node.esperar_estado():
+            return
         if node.publicar_escena():
             node.recorrer()
     finally:
