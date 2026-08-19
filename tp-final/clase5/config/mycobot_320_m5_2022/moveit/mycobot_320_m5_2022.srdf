@@ -19,8 +19,40 @@
     <joint name="joint6" value="0" />
   </group_state>
 
-  <end_effector name="tool0" parent_link="tool0" group="arm" />
+  <!-- Pose de arranque para cruzar la pared de torres: el codo queda levantado
+       y la pinza mirando hacia abajo, lejos de la mesa. -->
+  <group_state name="listo" group="arm">
+    <joint name="joint1" value="0" />
+    <joint name="joint2" value="-0.6" />
+    <joint name="joint3" value="1.2" />
+    <joint name="joint4" value="0" />
+    <joint name="joint5" value="-0.6" />
+    <joint name="joint6" value="0" />
+  </group_state>
 
+  <!-- La pinza es un grupo aparte, solo de eslabones. Si se la declarara como
+       end_effector del propio grupo "arm", MoveIt rechaza el SRDF porque el
+       grupo del efector no puede ser el mismo que el grupo padre. -->
+  <group name="gripper">
+    <link name="gripper_base" />
+    <link name="gripper_left1" />
+    <link name="gripper_left2" />
+    <link name="gripper_left3" />
+    <link name="gripper_right1" />
+    <link name="gripper_right2" />
+    <link name="gripper_right3" />
+    <link name="tool0" />
+  </group>
+
+  <end_effector name="pinza" parent_link="link6" group="gripper" parent_group="arm" />
+
+  <!-- La pinza no se planifica: gripper_controller la maneja aparte y las
+       otras cinco juntas son mimic de esa. -->
+  <passive_joint name="gripper_controller" />
+
+  <!-- ============================================================
+       COLISIONES DEL BRAZO
+       ============================================================ -->
   <disable_collisions link1="base_link" link2="link1" reason="Adjacent" />
   <disable_collisions link1="base_link" link2="link2" reason="Never" />
   <disable_collisions link1="base_link" link2="link3" reason="Never" />
@@ -42,5 +74,59 @@
   <disable_collisions link1="link4" link2="link5" reason="Adjacent" />
   <disable_collisions link1="link4" link2="link6" reason="Never" />
   <disable_collisions link1="link5" link2="link6" reason="Adjacent" />
+
+  <!-- ============================================================
+       COLISIONES DE LA PINZA
+       Los eslabones de la pinza se solapan geometricamente entre si en la
+       pose de montaje (es un mecanismo de barras, las piezas van anidadas).
+       Sin estas exclusiones MoveIt marca CUALQUIER estado como auto-colision
+       y falla con "Start state in collision" antes de empezar a planificar.
+       ============================================================ -->
+
+  <!-- Pinza contra la muneca -->
+  <disable_collisions link1="gripper_base"   link2="link6" reason="Adjacent" />
+  <disable_collisions link1="gripper_base"   link2="link5" reason="Never" />
+  <disable_collisions link1="gripper_base"   link2="link4" reason="Never" />
+  <disable_collisions link1="gripper_left1"  link2="link6" reason="Never" />
+  <disable_collisions link1="gripper_left1"  link2="link5" reason="Never" />
+  <disable_collisions link1="gripper_left1"  link2="link4" reason="Never" />
+  <disable_collisions link1="gripper_left2"  link2="link6" reason="Never" />
+  <disable_collisions link1="gripper_left2"  link2="link5" reason="Never" />
+  <disable_collisions link1="gripper_left2"  link2="link4" reason="Never" />
+  <disable_collisions link1="gripper_left3"  link2="link6" reason="Never" />
+  <disable_collisions link1="gripper_left3"  link2="link5" reason="Never" />
+  <disable_collisions link1="gripper_left3"  link2="link4" reason="Never" />
+  <disable_collisions link1="gripper_right1" link2="link6" reason="Never" />
+  <disable_collisions link1="gripper_right1" link2="link5" reason="Never" />
+  <disable_collisions link1="gripper_right1" link2="link4" reason="Never" />
+  <disable_collisions link1="gripper_right2" link2="link6" reason="Never" />
+  <disable_collisions link1="gripper_right2" link2="link5" reason="Never" />
+  <disable_collisions link1="gripper_right2" link2="link4" reason="Never" />
+  <disable_collisions link1="gripper_right3" link2="link6" reason="Never" />
+  <disable_collisions link1="gripper_right3" link2="link5" reason="Never" />
+  <disable_collisions link1="gripper_right3" link2="link4" reason="Never" />
+
+  <!-- Pinza contra si misma: las 21 combinaciones -->
+  <disable_collisions link1="gripper_base"   link2="gripper_left1"  reason="Default" />
+  <disable_collisions link1="gripper_base"   link2="gripper_left2"  reason="Adjacent" />
+  <disable_collisions link1="gripper_base"   link2="gripper_left3"  reason="Adjacent" />
+  <disable_collisions link1="gripper_base"   link2="gripper_right1" reason="Default" />
+  <disable_collisions link1="gripper_base"   link2="gripper_right2" reason="Adjacent" />
+  <disable_collisions link1="gripper_base"   link2="gripper_right3" reason="Adjacent" />
+  <disable_collisions link1="gripper_left1"  link2="gripper_left2"  reason="Default" />
+  <disable_collisions link1="gripper_left1"  link2="gripper_left3"  reason="Adjacent" />
+  <disable_collisions link1="gripper_left1"  link2="gripper_right1" reason="Default" />
+  <disable_collisions link1="gripper_left1"  link2="gripper_right2" reason="Default" />
+  <disable_collisions link1="gripper_left1"  link2="gripper_right3" reason="Default" />
+  <disable_collisions link1="gripper_left2"  link2="gripper_left3"  reason="Default" />
+  <disable_collisions link1="gripper_left2"  link2="gripper_right1" reason="Default" />
+  <disable_collisions link1="gripper_left2"  link2="gripper_right2" reason="Default" />
+  <disable_collisions link1="gripper_left2"  link2="gripper_right3" reason="Default" />
+  <disable_collisions link1="gripper_left3"  link2="gripper_right1" reason="Default" />
+  <disable_collisions link1="gripper_left3"  link2="gripper_right2" reason="Default" />
+  <disable_collisions link1="gripper_left3"  link2="gripper_right3" reason="Default" />
+  <disable_collisions link1="gripper_right1" link2="gripper_right2" reason="Default" />
+  <disable_collisions link1="gripper_right1" link2="gripper_right3" reason="Adjacent" />
+  <disable_collisions link1="gripper_right2" link2="gripper_right3" reason="Default" />
 
 </robot>

@@ -262,27 +262,13 @@ def generate_launch_description():
     )
 
     # ==========================================================================
-    # GENERAR ESCENA DE PLANIFICACIÓN
-    # Se publica un mensaje de PlanningScene para agregar un cilindro 
-    # para mantener coherencia con el world
+    # ESCENA DE PLANIFICACIÓN
+    # Antes se publicaba acá un cilindro "bloque_caible" en (0.3, 0, 0.25), que
+    # no se corresponde con ningún objeto de mundo_escritorio.world: era un
+    # obstáculo fantasma detrás del robot. La escena real (escritorio, torres,
+    # cono y pelota, con las alturas ya asentadas) la publica
+    # scripts/move_across_desk.py, que es quien conoce el recorrido.
     # ==========================================================================
-    exec_planning_scene = ExecuteProcess(
-        cmd=[
-            'ros2', 'topic', 'pub', '--once',
-            '/planning_scene',
-            'moveit_msgs/msg/PlanningScene',
-            '{"is_diff": true, "world": {"collision_objects": [{"id": "bloque_caible", "header": {"frame_id": "world"}, "operation": 0, "primitives": [{"type": 3, "dimensions": [0.5, 0.03]}], "primitive_poses": [{"position": {"x": 0.3, "y": 0.0, "z": 0.25}, "orientation": {"w": 1.0}}]}]}, "object_colors": [{"id": "bloque_caible", "color": {"r": 0.0, "g": 1.0, "b": 0.0, "a": 1.0}}]}'
-        ],
-        output='screen'
-    )
-    event_publish_scene = RegisterEventHandler(
-        event_handler=OnProcessExit(
-            target_action=joint_trajectory_controller_spawner,
-            on_exit=[
-                TimerAction(period=3.0, actions=[exec_planning_scene])
-            ]
-        )
-    )
 
 
     # ==========================================================================
@@ -345,6 +331,4 @@ def generate_launch_description():
         # Usuario
         node_rviz,
         node_plotjuggler,
-
-        event_publish_scene,
     ])

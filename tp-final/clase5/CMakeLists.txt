@@ -44,6 +44,10 @@ install (
 
 install(PROGRAMS
   scripts/hello_moveit.py
+  scripts/hello_moveit_obstacles.py
+  scripts/move_across_desk.py
+  scripts/move_to_joints.py
+  scripts/move_to_pose.py
   DESTINATION lib/${PROJECT_NAME}
 )
 

@@ -412,6 +412,62 @@
     <mimic joint="gripper_controller" multiplier="1.0" offset="0" />
   </joint>
 
+  <!--  TCP / PUNTO DE AGARRE *******************-->
+  <!-- El eje de aproximacion de la pinza es el +y de link6: con todas las
+       juntas en cero el brazo apunta hacia arriba y ese +y queda mirando
+       hacia abajo. La pinza ocupa y de -0.029 a +0.042 en ese frame, asi que
+       tool0 se coloca 13mm mas alla de la punta.
+       La rotacion -90 en x hace que el +z de tool0 sea el eje de
+       aproximacion, que es la convencion que espera MoveIt. -->
+  <xacro:property name="tool0_offset" value="0.055" />
+
+  <link name="tool0" />
+
+  <joint name="link6_to_tool0" type="fixed">
+    <parent link="link6" />
+    <child link="tool0" />
+    <origin xyz="0 ${tool0_offset} 0" rpy="-1.5708 0 0" />
+  </joint>
+
+  <!--  ROS2 CONTROL *******************-->
+  <!-- Sin este bloque no existe el controller_manager, y entonces los
+       spawners de mycobot_launch.py (joint_state_broadcaster y
+       joint_trajectory_controller) no tienen contra que levantar: MoveIt
+       puede planificar pero no ejecutar. Las interfaces son de esfuerzo
+       porque ros2_controllers.yaml ya define las ganancias PID por junta. -->
+  <xacro:arg name="controllers_file" default="$(find clase5)/config/mycobot_320_m5_2022/ros2_controllers.yaml" />
+
+  <xacro:macro name="joint_control" params="joint">
+    <joint name="${joint}">
+      <command_interface name="effort">
+        <param name="min">-${joint_effort}</param>
+        <param name="max">${joint_effort}</param>
+      </command_interface>
+      <state_interface name="position" />
+      <state_interface name="velocity" />
+      <state_interface name="effort" />
+    </joint>
+  </xacro:macro>
+
+  <ros2_control name="GazeboSimSystem" type="system">
+    <hardware>
+      <plugin>gz_ros2_control/GazeboSimSystem</plugin>
+    </hardware>
+    <xacro:joint_control joint="joint1" />
+    <xacro:joint_control joint="joint2" />
+    <xacro:joint_control joint="joint3" />
+    <xacro:joint_control joint="joint4" />
+    <xacro:joint_control joint="joint5" />
+    <xacro:joint_control joint="joint6" />
+  </ros2_control>
+
+  <gazebo>
+    <plugin filename="gz_ros2_control-system"
+      name="gz_ros2_control::GazeboSimROS2ControlPlugin">
+      <parameters>$(arg controllers_file)</parameters>
+    </plugin>
+  </gazebo>
+
   <!-- CONFIGURACION DE PLUGINS DE GAZEBO  *******************-->
   <xacro:macro name="apply_joint_force" params="joint">
     <plugin filename="gz-sim-apply-joint-force-system"
