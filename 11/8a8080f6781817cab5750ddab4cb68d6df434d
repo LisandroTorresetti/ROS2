@@ -1,0 +1,33 @@
+tp-final/clase5/scripts/move_across_desk.py
+  s_114fca8f5c2f32::t_0a74326c5aea8e 1-290
+tp-final/clase5/config/mycobot_320_m5_2022/moveit/mycobot_320_m5_2022.srdf
+  s_114fca8f5c2f32::t_b4775162d8d1ea 33-45,47
+  s_114fca8f5c2f32::t_ba5d614ec699de 22-31,48-55,78-132
+  s_114fca8f5c2f32::t_00ba71b02a38c1 32
+tp-final/clase5/package.xml
+  s_114fca8f5c2f32::t_9a4cf925178ffe 21-33
+tp-final/mycobot_320_m5_2022.xacro
+  s_114fca8f5c2f32::t_52ee8335d7f741 415-470
+tp-final/clase5/CMakeLists.txt
+  s_114fca8f5c2f32::t_e2b3b2eb112bbd 47-50
+tp-final/clase5/launch/mycobot_launch.py
+  s_114fca8f5c2f32::t_ed65edf17c9b6a 265-270
+tp-final/clase5/robot_description/mycobot_320_m5_2022/mycobot_320_m5_2022.xacro
+  s_114fca8f5c2f32::t_2a75df32e39b53 415-470
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "118a8080f6781817cab5750ddab4cb68d6df434d",
+  "prompts": {},
+  "sessions": {
+    "s_114fca8f5c2f32": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "66764dbc-3e75-4476-855c-3af026498965",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Ignacio Carol Lugones <ilugones@bigid.com>"
+    }
+  }
+}
