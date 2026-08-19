@@ -1,19 +1,25 @@
 #!/usr/bin/env python3
-# Mueve el myCobot 320 con pinza desde su pose de reposo hasta un punto del
-# otro lado del escritorio, esquivando la pared de torres de mundo_escritorio.
+# Mueve el myCobot 320 con pinza en slalom entre los tres pilares que estan
+# apoyados sobre el escritorio de mundo_escritorio.world, sin tocarlos.
 #
-# El recorrido tiene dos tramos:
-#   1) "listo"   -> se levanta sobre el lado cercano del escritorio
-#   2) "cruzado" -> pasa al otro lado de la pared de torres
+# Los pilares estan en fila sobre x=-0.22, separados 0.22 en y, con alturas
+# distintas (0.20 / 0.28 / 0.12). Entre uno y otro queda un hueco de 0.16.
 #
-# La recta entre los dos puntos atraviesa tower2box2 y el cono, asi que
-# RRTConnect esta obligado a rodear la pared (por los huecos en y ~ +-0.1) o a
-# pasarle por encima. Si el planner devuelve una trayectoria casi recta,
-# es senal de que la escena no se publico.
+# El recorrido:
+#   1) se para arriba del hueco derecho
+#   2) baja por el hueco, entre el pilar alto y el bajo
+#   3) vuelve a subir
+#   4) cruza por encima del pilar alto (su tope esta en z=+0.279)
+#   5) queda sobre el hueco izquierdo
+#
+# El paso 4 es el que importa: de un hueco al otro no se puede ir en linea
+# recta, hay que levantar la muneca por arriba del pilar del medio. Si el
+# planner devuelve una trayectoria que va derecho de (2) a (5), es senal de
+# que la escena no se publico.
 #
 # Uso:
 #   Terminal 1:  ros2 launch clase5 mycobot_launch.py
-#   Terminal 2:  ros2 run clase5 move_across_desk.py
+#   Terminal 2:  ros2 launch clase5 move_across_desk.launch.py
 
 import time
 
@@ -49,28 +55,54 @@ PINZA_ABAJO = (1.0, 0.0, 0.0, 0.0)
 
 # =====================================================================
 # TRAYECTO
-# Cada waypoint es (nombre, x, y, z). Verificados con IK: ambos alcanzables.
+# Cada waypoint es (nombre, x, y, z), en base_link.
+#
+# Los tres pilares estan en fila sobre x=-0.22, en y = +0.16 (alto 0.20),
+# y = -0.06 (alto 0.28) e y = -0.28 (alto 0.12). Entre uno y otro queda un
+# hueco de 0.16 de ancho.
+#
+# El recorrido baja por el hueco de la derecha (y=-0.17), sube, cruza por
+# encima del pilar mas alto (tope en z=+0.279) y termina sobre el hueco de la
+# izquierda (y=+0.05). No hay forma de ir de un hueco al otro sin levantar la
+# muneca por arriba del pilar del medio: eso es lo que fuerza al brazo a
+# moverse alrededor de los obstaculos y no a traves de ellos.
+#
+# Verificado fuera de linea: en cada uno de estos puntos hay entre 16 y 30
+# soluciones de IK distintas con la pinza mirando hacia abajo y todos los
+# eslabones a mas de 15mm de cualquier obstaculo.
 # =====================================================================
 WAYPOINTS = [
-      # Approach tower3 from above (it's only 1 box tall, easy)
-      ('sobre_torre2',     -0.20, 0.00,  0.36),
-      ('volver',     -0.05, 0.00,  0.25),
-  ]
+    ('sobre_hueco_der',  -0.22, -0.17, 0.32),   # arriba del hueco derecho
+    ('hueco_derecho',    -0.22, -0.17, 0.12),   # baja entre alta y baja
+    ('salir_der',        -0.22, -0.17, 0.32),   # vuelve a subir
+    ('sobre_la_alta',    -0.22, -0.06, 0.40),   # cruza sobre el pilar alto
+    ('sobre_hueco_izq',  -0.22,  0.05, 0.32),   # queda sobre el hueco izquierdo
+]
 
 
 TOLERANCIA_POS = 0.01    # radio de la esfera de tolerancia, en metros
-TOLERANCIA_ORI = 0.10    # tolerancia angular por eje, en radianes
-TIEMPO_PLANIFICACION = 10.0
+
+# Tolerancia angular por eje. El eje z de tool0 es el de aproximacion, asi que
+# x e y son los que realmente fijan "la pinza mira hacia abajo"; el giro
+# ALREDEDOR de ese eje no cambia nada util y dejarlo libre agranda muchisimo el
+# conjunto de estados objetivo. Con 0.10 rad en los tres ejes el objetivo
+# quedaba tan finito que KDL no lograba muestrear ni un estado valido y
+# move_group devolvia FAILURE (99999) sin siquiera empezar a planificar.
+TOLERANCIA_ORI_XY = 0.25    # inclinacion respecto de la vertical
+TOLERANCIA_ORI_Z = 3.15     # giro libre alrededor del eje de aproximacion
+
+TIEMPO_PLANIFICACION = 15.0
 INTENTOS = 10
 
 # =====================================================================
 # OBSTACULOS
-# Los objetos del mundo caen y se acomodan al darle play, asi que lo que se
-# publica es la posicion DE REPOSO, no la del spawn. Ejemplo: tower1box2
-# aparece en z=0.8 pero termina apoyada sobre tower1box1, en z=0.702.
+# Los tres pilares de mundo_escritorio.world son <static>true</static>, o sea
+# que no caen ni se acomodan: la pose del SDF ya es la definitiva y esta lista
+# coincide exactamente con lo que ve Gazebo.
 #
-# 'z_mundo' es la altura final en el frame del mundo; se le resta ALTURA_ROBOT
-# para pasarla a base_link.
+# 'z_mundo' es la altura del CENTRO en el frame del mundo; se le resta
+# ALTURA_ROBOT para pasarla a base_link. La tapa del escritorio esta en
+# z_mundo=0.552, asi que un pilar de alto h tiene su centro en 0.552 + h/2.
 # =====================================================================
 OBSTACULOS = [
     # La tapa del escritorio. Se modela 1.5cm por debajo de base_link para no
@@ -78,29 +110,17 @@ OBSTACULOS = [
     {'id': 'escritorio', 'type': 'box', 'xy': (-0.214, 0.0),
      'z_mundo': 0.518, 'dims': (0.490, 0.844, 0.040)},
 
-    # Torre 1 (3 cajas) en y=+0.2
-    {'id': 'tower1box1', 'type': 'box', 'xy': (-0.2, 0.2), 'z_mundo': 0.602, 'dims': (0.1, 0.1, 0.1)},
-    {'id': 'tower1box2', 'type': 'box', 'xy': (-0.2, 0.2), 'z_mundo': 0.702, 'dims': (0.1, 0.1, 0.1)},
-    {'id': 'tower1box3', 'type': 'box', 'xy': (-0.2, 0.2), 'z_mundo': 0.802, 'dims': (0.1, 0.1, 0.1)},
+    # Pilar alto: al frente del robot. Tope en base_link z=+0.279.
+    {'id': 'torre_alta', 'type': 'box', 'xy': (-0.22, -0.06),
+     'z_mundo': 0.692, 'dims': (0.06, 0.06, 0.28)},
 
-    # Torre 2 (2 cajas + cono encima) en y=0. Es la que bloquea el camino.
-    {'id': 'tower2box1', 'type': 'box', 'xy': (-0.2, 0.0), 'z_mundo': 0.602, 'dims': (0.1, 0.1, 0.1)},
-    {'id': 'tower2box2', 'type': 'box', 'xy': (-0.2, 0.0), 'z_mundo': 0.702, 'dims': (0.1, 0.1, 0.1)},
-    # El cono va como cilindro: es su envolvente, o sea que sobrestima el
-    # obstaculo. Conservador a proposito.
-    {'id': 'cone2', 'type': 'cylinder', 'xy': (-0.2, 0.0), 'z_mundo': 0.802, 'dims': (0.1, 0.05)},
+    # Pilar medio: lado +y. Tope en base_link z=+0.199.
+    {'id': 'torre_media', 'type': 'box', 'xy': (-0.22, 0.16),
+     'z_mundo': 0.652, 'dims': (0.06, 0.06, 0.20)},
 
-    # Torre 3 (1 caja) en y=-0.2
-    {'id': 'tower3', 'type': 'box', 'xy': (-0.2, -0.2), 'z_mundo': 0.602, 'dims': (0.1, 0.1, 0.1)},
-
-    # Pelota de tenis apoyada en el borde
-    {'id': 'TennisBall', 'type': 'sphere', 'xy': (0.0, -0.3), 'z_mundo': 0.572, 'dims': (0.02,)},
-
-    # OJO: bloque_caible NO esta aca a proposito. Spawnea en z=10 y cae 9.5m
-    # sobre el escritorio en x=-0.35: llega a ~14 m/s, rebota y se vuelca, asi
-    # que no hay una pose de reposo que se pueda anticipar. Modelarlo parado
-    # seria inventar. Cae justo al lado del objetivo (a 2.5cm), asi que para
-    # una corrida limpia conviene sacarlo de mundo_escritorio.world.
+    # Pilar bajo: lado -y. Tope en base_link z=+0.119.
+    {'id': 'torre_baja', 'type': 'box', 'xy': (-0.22, -0.28),
+     'z_mundo': 0.612, 'dims': (0.06, 0.06, 0.12)},
 ]
 
 
@@ -238,7 +258,10 @@ class MoveAcrossDesk(Node):
         req.allowed_planning_time = TIEMPO_PLANIFICACION
         req.max_velocity_scaling_factor = 0.3
         req.max_acceleration_scaling_factor = 0.3
-        req.planner_id = 'RRTConnect'
+        # El nombre tiene que coincidir con una entrada de planner_configs de
+        # ompl_planning.yaml. Con 'RRTConnect' pelado no matchea nada y OMPL
+        # descarta el pedido y usa su default.
+        req.planner_id = 'RRTConnectkConfigDefault'
 
         req.workspace_parameters = WorkspaceParameters()
         req.workspace_parameters.header.frame_id = REF_FRAME
@@ -281,9 +304,9 @@ class MoveAcrossDesk(Node):
         ori.orientation.y = qy
         ori.orientation.z = qz
         ori.orientation.w = qw
-        ori.absolute_x_axis_tolerance = TOLERANCIA_ORI
-        ori.absolute_y_axis_tolerance = TOLERANCIA_ORI
-        ori.absolute_z_axis_tolerance = TOLERANCIA_ORI
+        ori.absolute_x_axis_tolerance = TOLERANCIA_ORI_XY
+        ori.absolute_y_axis_tolerance = TOLERANCIA_ORI_XY
+        ori.absolute_z_axis_tolerance = TOLERANCIA_ORI_Z
         ori.weight = 1.0
         constraints.orientation_constraints.append(ori)
 
@@ -320,8 +343,14 @@ class MoveAcrossDesk(Node):
                 'exclusiones de la pinza, o un obstaculo publicado encima del robot.')
         elif code == -1:
             self.get_logger().error(
-                f'"{nombre}": FAILURE / sin solucion. Probar subir '
-                'TIEMPO_PLANIFICACION o alejar el punto de las torres.')
+                f'"{nombre}": PLANNING_FAILED. Probar subir '
+                'TIEMPO_PLANIFICACION o alejar el punto de los pilares.')
+        elif code == 99999:
+            self.get_logger().error(
+                f'"{nombre}": FAILURE. Casi siempre es que no se pudo muestrear '
+                'NINGUN estado objetivo: la orientacion pedida es inalcanzable en '
+                'ese punto, o queda tan justa que KDL no converge. Aflojar '
+                'TOLERANCIA_ORI_XY o mover el waypoint.')
         else:
             self.get_logger().error(f'"{nombre}": error_code={code}')
         return False

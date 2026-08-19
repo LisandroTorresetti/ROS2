@@ -88,318 +88,83 @@
             </link>
         </model>
 
-        <model name="TennisBall">
-    <static>false</static>
+        <!-- ==================================================================
+             TRES OBSTACULOS
+             Tres pilares apoyados sobre la tapa del escritorio (z=0.552).
+             Estan en fila sobre x=-0.22 y separados 0.22 en y, asi que entre
+             uno y otro queda un hueco de 0.16 por donde el brazo puede bajar.
+             Las alturas son distintas a proposito: el del medio es el mas
+             alto (0.28) y obliga a levantar la muneca para cruzar de un hueco
+             al otro.
+             Son <static>true</static>: no caen ni se acomodan al darle play,
+             asi que la escena de planificacion de move_across_desk.py
+             coincide exactamente con lo que ve Gazebo.
+             ================================================================== -->
 
-    <pose>0.0 -0.3 0.6 0 0 0</pose>
+        <!-- Pilar alto, al frente del robot. Tope en z = 0.552 + 0.28 = 0.832 -->
+        <model name="torre_alta">
+            <static>true</static>
+            <pose>-0.22 -0.06 0.692 0 0 0</pose>
+            <link name="link">
+                <visual name="visual">
+                    <geometry>
+                        <box><size>0.06 0.06 0.28</size></box>
+                    </geometry>
+                    <material>
+                        <ambient>0.8 0.2 0.2 1</ambient>
+                        <diffuse>0.9 0.25 0.25 1</diffuse>
+                    </material>
+                </visual>
+                <collision name="collision">
+                    <geometry>
+                        <box><size>0.06 0.06 0.28</size></box>
+                    </geometry>
+                </collision>
+            </link>
+        </model>
 
-    <link name="link">
-        <inertial>
-            <mass>0.05</mass>
-            <inertia>
-                <ixx>0.00008</ixx>
-                <iyy>0.00008</iyy>
-                <izz>0.00008</izz>
-                <ixy>0</ixy>
-                <ixz>0</ixz>
-                <iyz>0</iyz>
-            </inertia>
-        </inertial>
+        <!-- Pilar medio, del lado +y. Tope en z = 0.552 + 0.20 = 0.752 -->
+        <model name="torre_media">
+            <static>true</static>
+            <pose>-0.22 0.16 0.652 0 0 0</pose>
+            <link name="link">
+                <visual name="visual">
+                    <geometry>
+                        <box><size>0.06 0.06 0.20</size></box>
+                    </geometry>
+                    <material>
+                        <ambient>0.2 0.5 0.8 1</ambient>
+                        <diffuse>0.25 0.6 0.9 1</diffuse>
+                    </material>
+                </visual>
+                <collision name="collision">
+                    <geometry>
+                        <box><size>0.06 0.06 0.20</size></box>
+                    </geometry>
+                </collision>
+            </link>
+        </model>
 
-        <visual name="visual">
-            <geometry>
-                <sphere>
-                    <radius>0.02</radius>
-                </sphere>
-            </geometry>
-
-            <material>
-                <ambient>0.75 0.90 0.10 1</ambient>
-                <diffuse>0.85 1.00 0.15 1</diffuse>
-                <specular>0.3 0.3 0.3 1</specular>
-            </material>
-        </visual>
-
-        <collision name="collision">
-            <geometry>
-                <sphere>
-                    <radius>0.02</radius>
-                </sphere>
-            </geometry>
-        </collision>
-    </link>
-</model>
-    <model name="tower1box1">
-    <static>false</static>
-
-    <pose>-0.2 0.2 0.6 0 0 0</pose>
-
-    <link name="link">
-        <inertial>
-            <mass>0.05</mass>
-            <inertia>
-                <ixx>0.00008</ixx>
-                <iyy>0.00008</iyy>
-                <izz>0.00008</izz>
-                <ixy>0</ixy>
-                <ixz>0</ixz>
-                <iyz>0</iyz>
-            </inertia>
-        </inertial>
-
-        <visual name="visual">
-            <geometry>
-                <box>
-                    <size>0.1 0.1 0.1</size>
-                </box>
-            </geometry>
-        </visual>
-
-        <collision name="collision">
-            <geometry>
-                <box>
-                    <size>0.1 0.1 0.1</size>
-                </box>
-            </geometry>
-        </collision>
-    </link>
-</model>
-
-<model name="tower1box2">
-    <static>false</static>
-
-    <pose>-0.2 0.2 0.8 0 0 0</pose>
-
-    <link name="link">
-        <inertial>
-            <mass>0.05</mass>
-            <inertia>
-                <ixx>0.00008</ixx>
-                <iyy>0.00008</iyy>
-                <izz>0.00008</izz>
-                <ixy>0</ixy>
-                <ixz>0</ixz>
-                <iyz>0</iyz>
-            </inertia>
-        </inertial>
-
-        <visual name="visual">
-            <geometry>
-                <box>
-                    <size>0.1 0.1 0.1</size>
-                </box>
-            </geometry>
-
-            <material>
-                <ambient>1 1 1 1</ambient>
-                <diffuse>1 1 1 1</diffuse>
-                <specular>0.5 0.5 0.5 1</specular>
-            </material>
-        </visual>
-
-        <collision name="collision">
-            <geometry>
-                <box>
-                    <size>0.1 0.1 0.1</size>
-                </box>
-            </geometry>
-        </collision>
-    </link>
-</model>
-
-<model name="tower1box3">
-    <static>false</static>
-
-    <pose>-0.2 0.2 0.9 0 0 0</pose>
-
-    <link name="link">
-        <inertial>
-            <mass>0.05</mass>
-            <inertia>
-                <ixx>0.00008</ixx>
-                <iyy>0.00008</iyy>
-                <izz>0.00008</izz>
-                <ixy>0</ixy>
-                <ixz>0</ixz>
-                <iyz>0</iyz>
-            </inertia>
-        </inertial>
-
-        <visual name="visual">
-            <geometry>
-                <box>
-                    <size>0.1 0.1 0.1</size>
-                </box>
-            </geometry>
-        </visual>
-
-        <collision name="collision">
-            <geometry>
-                <box>
-                    <size>0.1 0.1 0.1</size>
-                </box>
-            </geometry>
-        </collision>
-    </link>
-</model>
-
-<model name="cone2">
-    <static>false</static>
-
-    <pose>-0.2 0 1 0 0 0</pose>
-
-    <link name="link">
-        <inertial>
-            <mass>0.05</mass>
-            <inertia>
-                <ixx>0.00008</ixx>
-                <iyy>0.00008</iyy>
-                <izz>0.00008</izz>
-                <ixy>0</ixy>
-                <ixz>0</ixz>
-                <iyz>0</iyz>
-            </inertia>
-        </inertial>
-
-        <visual name="visual">
-            <geometry>
-                <cone>
-                    <radius>0.05</radius>
-                    <length>0.2</length>
-                </cone>
-            </geometry>
-
-            <material>
-                <ambient>1.0 0.25 0.0 1</ambient>
-                <diffuse>1.0 0.35 0.0 1</diffuse>
-                <specular>0.3 0.3 0.3 1</specular>
-    </material>
-        </visual>
-
-        <collision name="collision">
-            <geometry>
-                <cone>
-                    <radius>0.05</radius>
-                    <length>0.1</length>
-                </cone>
-            </geometry>
-        </collision>
-    </link>
-</model>
-
-
-    <model name="tower2box1">
-    <static>false</static>
-
-    <pose>-0.2 0 0.6 0 0 0</pose>
-
-    <link name="link">
-        <inertial>
-            <mass>0.05</mass>
-            <inertia>
-                <ixx>0.00008</ixx>
-                <iyy>0.00008</iyy>
-                <izz>0.00008</izz>
-                <ixy>0</ixy>
-                <ixz>0</ixz>
-                <iyz>0</iyz>
-            </inertia>
-        </inertial>
-
-        <visual name="visual">
-            <geometry>
-                <box>
-                    <size>0.1 0.1 0.1</size>
-                </box>
-            </geometry>
-        </visual>
-
-        <collision name="collision">
-            <geometry>
-                <box>
-                    <size>0.1 0.1 0.1</size>
-                </box>
-            </geometry>
-        </collision>
-    </link>
-</model>
-
-<model name="tower2box2">
-    <static>false</static>
-
-    <pose>-0.2 0 0.8 0 0 0</pose>
-
-    <link name="link">
-        <inertial>
-            <mass>0.05</mass>
-            <inertia>
-                <ixx>0.00008</ixx>
-                <iyy>0.00008</iyy>
-                <izz>0.00008</izz>
-                <ixy>0</ixy>
-                <ixz>0</ixz>
-                <iyz>0</iyz>
-            </inertia>
-        </inertial>
-
-        <visual name="visual">
-            <geometry>
-                <box>
-                    <size>0.1 0.1 0.1</size>
-                </box>
-            </geometry>
-
-            <material>
-                <ambient>1 1 1 1</ambient>
-                <diffuse>1 1 1 1</diffuse>
-                <specular>0.5 0.5 0.5 1</specular>
-            </material>
-        </visual>
-
-        <collision name="collision">
-            <geometry>
-                <box>
-                    <size>0.1 0.1 0.1</size>
-                </box>
-            </geometry>
-        </collision>
-    </link>
-</model>
-
-    <model name="tower3">
-    <static>false</static>
-
-    <pose>-0.2 -0.2 0.6 0 0 0</pose>
-
-    <link name="link">
-        <inertial>
-            <mass>0.05</mass>
-            <inertia>
-                <ixx>0.00008</ixx>
-                <iyy>0.00008</iyy>
-                <izz>0.00008</izz>
-                <ixy>0</ixy>
-                <ixz>0</ixz>
-                <iyz>0</iyz>
-            </inertia>
-        </inertial>
-
-        <visual name="visual">
-            <geometry>
-                <box>
-                    <size>0.1 0.1 0.1</size>
-                </box>
-            </geometry>
-        </visual>
-
-        <collision name="collision">
-            <geometry>
-                <box>
-                    <size>0.1 0.1 0.1</size>
-                </box>
-            </geometry>
-        </collision>
-    </link>
-</model>
+        <!-- Pilar bajo, del lado -y. Tope en z = 0.552 + 0.12 = 0.672 -->
+        <model name="torre_baja">
+            <static>true</static>
+            <pose>-0.22 -0.28 0.612 0 0 0</pose>
+            <link name="link">
+                <visual name="visual">
+                    <geometry>
+                        <box><size>0.06 0.06 0.12</size></box>
+                    </geometry>
+                    <material>
+                        <ambient>0.9 0.7 0.1 1</ambient>
+                        <diffuse>1.0 0.8 0.15 1</diffuse>
+                    </material>
+                </visual>
+                <collision name="collision">
+                    <geometry>
+                        <box><size>0.06 0.06 0.12</size></box>
+                    </geometry>
+                </collision>
+            </link>
+        </model>
     </world>
 </sdf>
