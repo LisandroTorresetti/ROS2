@@ -257,7 +257,7 @@ def generate_launch_description():
         ]),
         launch_arguments=[(
             'gz_args', [
-                '-r', # Correr la simu inmediatamente despues de cargar
+                #'-r', # Correr la simu inmediatamente despues de cargar
                 '-v 1 ',
                 PathJoinSubstitution([
                     FindPackageShare('clase5'),
