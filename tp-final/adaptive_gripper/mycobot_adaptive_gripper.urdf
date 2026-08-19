@@ -9,13 +9,13 @@
     </inertial>
     <visual>
       <geometry>
-      <mesh filename="package://clase4/robot_description/adaptive_gripper/gripper_base.dae"/>
+      <mesh filename="package://clase5/robot_description/adaptive_gripper/gripper_base.dae"/>
       </geometry>
     <origin xyz = "0.0 0 -0.012 " rpy = " 0 0 0"/>
     </visual>
     <collision>
       <geometry>
-      <mesh filename="package://clase4/robot_description/adaptive_gripper/gripper_base.dae"/>
+      <mesh filename="package://clase5/robot_description/adaptive_gripper/gripper_base.dae"/>
       </geometry>
     <origin xyz = "0.0 0 -0.012 " rpy = " 0 0 0"/>
     </collision>
@@ -29,13 +29,13 @@
     </inertial>
     <visual>
       <geometry>
-      <mesh filename="package://clase4/robot_description/adaptive_gripper/gripper_left1.dae"/>
+      <mesh filename="package://clase5/robot_description/adaptive_gripper/gripper_left1.dae"/>
       </geometry>
     <origin xyz = "0.039 -0.0133 -0.012 " rpy = " 0 0 0"/>
     </visual>
     <collision>
       <geometry>
-      <mesh filename="package://clase4/robot_description/adaptive_gripper/gripper_left1.dae"/>
+      <mesh filename="package://clase5/robot_description/adaptive_gripper/gripper_left1.dae"/>
       </geometry>
         <origin xyz = "0.039 -0.0133 -0.012 " rpy = " 0 0 0"/>
     </collision>
@@ -49,13 +49,13 @@
     </inertial>
     <visual>
       <geometry>
-      <mesh filename="package://clase4/robot_description/adaptive_gripper/gripper_left2.dae"/>
+      <mesh filename="package://clase5/robot_description/adaptive_gripper/gripper_left2.dae"/>
       </geometry>
     <origin xyz = "0.005 -0.0195 -0.012 " rpy = " 0 0 0"/>
     </visual>
     <collision>
       <geometry>
-      <mesh filename="package://clase4/robot_description/adaptive_gripper/gripper_left2.dae"/>
+      <mesh filename="package://clase5/robot_description/adaptive_gripper/gripper_left2.dae"/>
       </geometry>
         <origin xyz = "0.005 -0.0195 -0.012 " rpy = " 0 0 0"/>
     </collision>
@@ -69,13 +69,13 @@
     </inertial>
     <visual>
       <geometry>
-      <mesh filename="package://clase4/robot_description/adaptive_gripper/gripper_left3.dae"/>
+      <mesh filename="package://clase5/robot_description/adaptive_gripper/gripper_left3.dae"/>
       </geometry>
     <origin xyz = "0.012 0.0025 -0.012 " rpy = " 0 0 0"/>
     </visual>
     <collision>
       <geometry>
-      <mesh filename="package://clase4/robot_description/adaptive_gripper/gripper_left3.dae"/>
+      <mesh filename="package://clase5/robot_description/adaptive_gripper/gripper_left3.dae"/>
       </geometry>
     <origin xyz = "0.012 0.0025 -0.012 " rpy = " 0 0 0"/>
     </collision>
@@ -89,13 +89,13 @@
     </inertial>
     <visual>
       <geometry>
-      <mesh filename="package://clase4/robot_description/adaptive_gripper/gripper_right1.dae"/>
+      <mesh filename="package://clase5/robot_description/adaptive_gripper/gripper_right1.dae"/>
       </geometry>
     <origin xyz = "-0.039 -0.0133 -0.012 " rpy = " 0 0 0"/>
     </visual>
     <collision>
       <geometry>
-      <mesh filename="package://clase4/robot_description/adaptive_gripper/gripper_right1.dae"/>
+      <mesh filename="package://clase5/robot_description/adaptive_gripper/gripper_right1.dae"/>
       </geometry>
         <origin xyz = "-0.039 -0.0133 -0.012 " rpy = " 0 0 0"/>
     </collision>
@@ -109,13 +109,13 @@
     </inertial>
     <visual>
       <geometry>
-      <mesh filename="package://clase4/robot_description/adaptive_gripper/gripper_right2.dae"/>
+      <mesh filename="package://clase5/robot_description/adaptive_gripper/gripper_right2.dae"/>
       </geometry>
     <origin xyz = "-0.005 -0.0195 -0.012 " rpy = " 0 0 0"/>
     </visual>
     <collision>
       <geometry>
-      <mesh filename="package://clase4/robot_description/adaptive_gripper/gripper_right2.dae"/>
+      <mesh filename="package://clase5/robot_description/adaptive_gripper/gripper_right2.dae"/>
       </geometry>
         <origin xyz = "-0.005 -0.0195 -0.012 " rpy = " 0 0 0"/>
     </collision>
@@ -129,13 +129,13 @@
     </inertial>
     <visual>
       <geometry>
-      <mesh filename="package://clase4/robot_description/adaptive_gripper/gripper_right3.dae"/>
+      <mesh filename="package://clase5/robot_description/adaptive_gripper/gripper_right3.dae"/>
       </geometry>
     <origin xyz = "-0.012 0.0025 -0.012 " rpy = " 0 0 0"/>
     </visual>
     <collision>
       <geometry>
-      <mesh filename="package://clase4/robot_description/adaptive_gripper/gripper_right3.dae"/>
+      <mesh filename="package://clase5/robot_description/adaptive_gripper/gripper_right3.dae"/>
       </geometry>
     <origin xyz = "-0.012 0.0025 -0.012" rpy = " 0 0 0"/>
     </collision>
