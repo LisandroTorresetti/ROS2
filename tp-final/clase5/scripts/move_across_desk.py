@@ -52,9 +52,11 @@ PINZA_ABAJO = (1.0, 0.0, 0.0, 0.0)
 # Cada waypoint es (nombre, x, y, z). Verificados con IK: ambos alcanzables.
 # =====================================================================
 WAYPOINTS = [
-    ('listo',   -0.05, 0.0, 0.25),   # sobre el lado cercano, bajo el cono
-    ('cruzado', -0.30, 0.0, 0.14),   # del otro lado de la pared de torres
-]
+      # Approach tower3 from above (it's only 1 box tall, easy)
+      ('sobre_torre2',     -0.20, 0.00,  0.36),
+      ('volver',     -0.05, 0.00,  0.25),
+  ]
+
 
 TOLERANCIA_POS = 0.01    # radio de la esfera de tolerancia, en metros
 TOLERANCIA_ORI = 0.10    # tolerancia angular por eje, en radianes
@@ -326,6 +328,8 @@ class MoveAcrossDesk(Node):
 
     # -----------------------------------------------------------------
     def recorrer(self):
+        self.get_logger().info('Esperando 3s para que se estabilice')
+        time.sleep(3.0)
         if not self._client.wait_for_server(timeout_sec=20.0):
             self.get_logger().error('/move_action no disponible: no arranco move_group')
             return False
