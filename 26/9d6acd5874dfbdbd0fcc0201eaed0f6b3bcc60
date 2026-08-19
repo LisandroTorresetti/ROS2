@@ -1,0 +1,21 @@
+tp-final/clase5/launch/hello_moveit_obstacles.launch.py
+  s_114fca8f5c2f32::t_a58b565e1c8452 1-59
+tp-final/clase5/launch/move_across_desk.launch.py
+  s_114fca8f5c2f32::t_b0737da8f56952 1-63
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "269d6acd5874dfbdbd0fcc0201eaed0f6b3bcc60",
+  "prompts": {},
+  "sessions": {
+    "s_114fca8f5c2f32": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "66764dbc-3e75-4476-855c-3af026498965",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Ignacio Carol Lugones <ilugones@bigid.com>"
+    }
+  }
+}
