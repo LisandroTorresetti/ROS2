@@ -1,0 +1,25 @@
+tp-final/clase5/worlds/mundo_escritorio.world
+  s_114fca8f5c2f32::t_e67c59fea30268 12-30
+tp-final/worlds/mundo_escritorio.world
+  s_114fca8f5c2f32::t_8574c54ba592bc 12-30
+tp-final/mycobot_320_m5_2022.xacro
+  s_114fca8f5c2f32::t_8574c54ba592bc 18-24,370,381,392,403,414,425
+tp-final/clase5/robot_description/mycobot_320_m5_2022/mycobot_320_m5_2022.xacro
+  s_114fca8f5c2f32::t_0acbcfd776e09c 18-24,370,381,392,403,414,425
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "d2b8a4d7c78bbfeed4fea796fd84744477ce89fd",
+  "prompts": {},
+  "sessions": {
+    "s_114fca8f5c2f32": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "66764dbc-3e75-4476-855c-3af026498965",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Ignacio Carol Lugones <ilugones@bigid.com>"
+    }
+  }
+}
