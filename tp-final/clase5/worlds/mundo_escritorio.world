@@ -1,0 +1,439 @@
+<?xml version="1.0"?>
+<sdf version="1.6">
+    <world name="mundo_simulacion">
+        <!-- Si declaramos al menos 1 plugin, debemos manualmente incorporar los plugins básicos para que gazebo funcione! -->
+        <!-- Físicas -->
+        <plugin filename="gz-sim-physics-system" name="gz::sim::systems::Physics"> </plugin>
+        <!-- SIN ESTO no existe el servicio /world/default/create -->
+        <plugin filename="gz-sim-user-commands-system" name="gz::sim::systems::UserCommands"> </plugin>
+        <!-- Necesario para que ros_gz_sim pueda hacer broadcast del scene -->
+        <plugin filename="gz-sim-scene-broadcaster-system" name="gz::sim::systems::SceneBroadcaster"> </plugin>
+        <!-- Recién ahora podemos hablar de poner un sensor u otro plugin en el SDF! -->
+        
+        
+        <gravity>0 0 -9.8</gravity>
+
+        <light name="sol" type="directional">
+            <cast_shadows>true</cast_shadows>
+            <pose>0 0 10 0 0 0</pose>
+            <diffuse>0.8 0.8 0.8 1</diffuse>
+            <specular>0.2 0.2 0.2 1</specular>
+            <direction>-0.5 0.1 -0.9</direction>
+        </light>
+
+        <include>
+            <uri>model://Desk</uri>
+            <pose>-0.2 0.0 0.0 0 0 0</pose>
+        </include>        
+
+        <model name="suelo">
+            <static>true</static>
+            <link name="suelo_link">
+                <collision name="suelo_collision">
+                    <geometry>
+                        <plane>
+                            <normal>0 0 1</normal> <!-- Normal hacia arriba en Z -->
+                            <size>50 50</size> <!-- Superficie grande para cubrir el área -->
+                        </plane>
+                    </geometry>
+                    <surface>
+                        <contact>
+                            <ode>
+                                <kp>100000</kp> <!-- Rigidez del contacto -->
+                                <kd>1.0</kd>      <!-- Amortiguación del contacto -->
+                            </ode>
+                        </contact>
+                        <friction>
+                            <ode>
+                                <mu>1.0</mu> <!-- Coeficiente de fricción -->
+                                <mu2>1.0</mu2>
+                            </ode>
+                        </friction>
+                    </surface>
+                </collision>
+                <visual name="suelo_visual">
+                    <geometry>
+                        <plane>
+                            <normal>0 0 1</normal>
+                            <size>50 50</size>
+                        </plane>
+                    </geometry>
+                    <material>
+                        <ambient>0.85 0.82 0.78 1</ambient>
+                        <diffuse>0.85 0.82 0.78 1</diffuse>
+                    </material>
+                </visual>
+            </link>
+        </model>
+        <!-- Obstáculo móvil -->
+        <model name="bloque_caible">
+
+            <pose>-0.35 0 10 0 0 0</pose>
+
+            <link name="link">
+
+                <inertial>
+                    <mass>2.0</mass>
+
+                    <inertia>
+                        <ixx>0.05</ixx>
+                        <iyy>0.05</iyy>
+                        <izz>0.05</izz>
+                    </inertia>
+                </inertial>
+
+                <collision name="collision">
+                    <geometry>
+                        <box>
+                            <size>0.05 0.05 0.5</size>
+                        </box>
+                    </geometry>
+
+                    <surface>
+                        <contact>
+                            <ode>
+                                <kp>100000</kp>
+                                <kd>5</kd>
+                            </ode>
+                        </contact>
+
+                        <friction>
+                            <ode>
+                                <mu>0.8</mu>
+                                <mu2>0.8</mu2>
+                            </ode>
+                        </friction>
+                    </surface>
+                </collision>
+
+                <visual name="visual">
+                    <geometry>
+                        <box>
+                            <size>0.05 0.05 0.5</size>
+                        </box>
+                    </geometry>
+
+                    <material>
+                        <ambient>1 0 0 1</ambient>
+                        <diffuse>1 0 0 1</diffuse>
+                    </material>
+                </visual>
+
+            </link>
+        </model>
+
+        <model name="TennisBall">
+    <static>false</static>
+
+    <pose>0.0 -0.3 0.6 0 0 0</pose>
+
+    <link name="link">
+        <inertial>
+            <mass>0.05</mass>
+            <inertia>
+                <ixx>0.00008</ixx>
+                <iyy>0.00008</iyy>
+                <izz>0.00008</izz>
+                <ixy>0</ixy>
+                <ixz>0</ixz>
+                <iyz>0</iyz>
+            </inertia>
+        </inertial>
+
+        <visual name="visual">
+            <geometry>
+                <sphere>
+                    <radius>0.02</radius>
+                </sphere>
+            </geometry>
+
+            <material>
+                <ambient>0.75 0.90 0.10 1</ambient>
+                <diffuse>0.85 1.00 0.15 1</diffuse>
+                <specular>0.3 0.3 0.3 1</specular>
+            </material>
+        </visual>
+
+        <collision name="collision">
+            <geometry>
+                <sphere>
+                    <radius>0.02</radius>
+                </sphere>
+            </geometry>
+        </collision>
+    </link>
+</model>
+    <model name="tower1box1">
+    <static>false</static>
+
+    <pose>-0.2 0.2 0.6 0 0 0</pose>
+
+    <link name="link">
+        <inertial>
+            <mass>0.05</mass>
+            <inertia>
+                <ixx>0.00008</ixx>
+                <iyy>0.00008</iyy>
+                <izz>0.00008</izz>
+                <ixy>0</ixy>
+                <ixz>0</ixz>
+                <iyz>0</iyz>
+            </inertia>
+        </inertial>
+
+        <visual name="visual">
+            <geometry>
+                <box>
+                    <size>0.1 0.1 0.1</size>
+                </box>
+            </geometry>
+        </visual>
+
+        <collision name="collision">
+            <geometry>
+                <box>
+                    <size>0.1 0.1 0.1</size>
+                </box>
+            </geometry>
+        </collision>
+    </link>
+</model>
+
+<model name="tower1box2">
+    <static>false</static>
+
+    <pose>-0.2 0.2 0.8 0 0 0</pose>
+
+    <link name="link">
+        <inertial>
+            <mass>0.05</mass>
+            <inertia>
+                <ixx>0.00008</ixx>
+                <iyy>0.00008</iyy>
+                <izz>0.00008</izz>
+                <ixy>0</ixy>
+                <ixz>0</ixz>
+                <iyz>0</iyz>
+            </inertia>
+        </inertial>
+
+        <visual name="visual">
+            <geometry>
+                <box>
+                    <size>0.1 0.1 0.1</size>
+                </box>
+            </geometry>
+
+            <material>
+                <ambient>1 1 1 1</ambient>
+                <diffuse>1 1 1 1</diffuse>
+                <specular>0.5 0.5 0.5 1</specular>
+            </material>
+        </visual>
+
+        <collision name="collision">
+            <geometry>
+                <box>
+                    <size>0.1 0.1 0.1</size>
+                </box>
+            </geometry>
+        </collision>
+    </link>
+</model>
+
+<model name="tower1box3">
+    <static>false</static>
+
+    <pose>-0.2 0.2 0.9 0 0 0</pose>
+
+    <link name="link">
+        <inertial>
+            <mass>0.05</mass>
+            <inertia>
+                <ixx>0.00008</ixx>
+                <iyy>0.00008</iyy>
+                <izz>0.00008</izz>
+                <ixy>0</ixy>
+                <ixz>0</ixz>
+                <iyz>0</iyz>
+            </inertia>
+        </inertial>
+
+        <visual name="visual">
+            <geometry>
+                <box>
+                    <size>0.1 0.1 0.1</size>
+                </box>
+            </geometry>
+        </visual>
+
+        <collision name="collision">
+            <geometry>
+                <box>
+                    <size>0.1 0.1 0.1</size>
+                </box>
+            </geometry>
+        </collision>
+    </link>
+</model>
+
+<model name="cone2">
+    <static>false</static>
+
+    <pose>-0.2 0 1 0 0 0</pose>
+
+    <link name="link">
+        <inertial>
+            <mass>0.05</mass>
+            <inertia>
+                <ixx>0.00008</ixx>
+                <iyy>0.00008</iyy>
+                <izz>0.00008</izz>
+                <ixy>0</ixy>
+                <ixz>0</ixz>
+                <iyz>0</iyz>
+            </inertia>
+        </inertial>
+
+        <visual name="visual">
+            <geometry>
+                <cone>
+                    <radius>0.05</radius>
+                    <length>0.2</length>
+                </cone>
+            </geometry>
+
+            <material>
+                <ambient>1.0 0.25 0.0 1</ambient>
+                <diffuse>1.0 0.35 0.0 1</diffuse>
+                <specular>0.3 0.3 0.3 1</specular>
+    </material>
+        </visual>
+
+        <collision name="collision">
+            <geometry>
+                <cone>
+                    <radius>0.05</radius>
+                    <length>0.1</length>
+                </cone>
+            </geometry>
+        </collision>
+    </link>
+</model>
+
+
+    <model name="tower2box1">
+    <static>false</static>
+
+    <pose>-0.2 0 0.6 0 0 0</pose>
+
+    <link name="link">
+        <inertial>
+            <mass>0.05</mass>
+            <inertia>
+                <ixx>0.00008</ixx>
+                <iyy>0.00008</iyy>
+                <izz>0.00008</izz>
+                <ixy>0</ixy>
+                <ixz>0</ixz>
+                <iyz>0</iyz>
+            </inertia>
+        </inertial>
+
+        <visual name="visual">
+            <geometry>
+                <box>
+                    <size>0.1 0.1 0.1</size>
+                </box>
+            </geometry>
+        </visual>
+
+        <collision name="collision">
+            <geometry>
+                <box>
+                    <size>0.1 0.1 0.1</size>
+                </box>
+            </geometry>
+        </collision>
+    </link>
+</model>
+
+<model name="tower2box2">
+    <static>false</static>
+
+    <pose>-0.2 0 0.8 0 0 0</pose>
+
+    <link name="link">
+        <inertial>
+            <mass>0.05</mass>
+            <inertia>
+                <ixx>0.00008</ixx>
+                <iyy>0.00008</iyy>
+                <izz>0.00008</izz>
+                <ixy>0</ixy>
+                <ixz>0</ixz>
+                <iyz>0</iyz>
+            </inertia>
+        </inertial>
+
+        <visual name="visual">
+            <geometry>
+                <box>
+                    <size>0.1 0.1 0.1</size>
+                </box>
+            </geometry>
+
+            <material>
+                <ambient>1 1 1 1</ambient>
+                <diffuse>1 1 1 1</diffuse>
+                <specular>0.5 0.5 0.5 1</specular>
+            </material>
+        </visual>
+
+        <collision name="collision">
+            <geometry>
+                <box>
+                    <size>0.1 0.1 0.1</size>
+                </box>
+            </geometry>
+        </collision>
+    </link>
+</model>
+
+    <model name="tower3">
+    <static>false</static>
+
+    <pose>-0.2 -0.2 0.6 0 0 0</pose>
+
+    <link name="link">
+        <inertial>
+            <mass>0.05</mass>
+            <inertia>
+                <ixx>0.00008</ixx>
+                <iyy>0.00008</iyy>
+                <izz>0.00008</izz>
+                <ixy>0</ixy>
+                <ixz>0</ixz>
+                <iyz>0</iyz>
+            </inertia>
+        </inertial>
+
+        <visual name="visual">
+            <geometry>
+                <box>
+                    <size>0.1 0.1 0.1</size>
+                </box>
+            </geometry>
+        </visual>
+
+        <collision name="collision">
+            <geometry>
+                <box>
+                    <size>0.1 0.1 0.1</size>
+                </box>
+            </geometry>
+        </collision>
+    </link>
+</model>
+    </world>
+</sdf>

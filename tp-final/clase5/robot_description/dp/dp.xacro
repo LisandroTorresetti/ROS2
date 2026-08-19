@@ -1,0 +1,168 @@
+<?xml version="1.0"?>
+<robot name="double_pendulum" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!-- Incluimos los parámetros comunes -->
+  <xacro:include filename="$(find clase5)/robot_description/dp/dp_params.xacro" />
+
+  <!--*******************  DEFINICIONES DE ESLABONES  *******************-->
+  <!-- World link -->
+  <link name="world" />
+  <!-- Junta fija entre world y base_link -->
+  <joint name="fixed" type="fixed">
+    <parent link="world" />
+    <child link="base_link" />
+    <origin xyz="0 0 0.5" rpy="${pi/2.0} 0 0" />
+  </joint>
+
+  <!-- Link base (fijo) -->
+  <!-- La terna 0 está centrada en la base del cilindro con el Z para arriba  -->
+  <link name="base_link">
+    <inertial>
+      <origin xyz="0 0 ${height0/2.0}" />
+      <mass value="${mass0}" />
+      <inertia ixx="${ixx0}" ixy="0.0" ixz="0.0" iyy="${iyy0}" iyz="0.0" izz="${izz0}" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 ${height0/2.0}" />
+      <geometry>
+        <cylinder radius="${radius0}" length="${height0}" />
+      </geometry>
+      <material name="green">
+        <color rgba="0 1 0 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 ${height0/2.0}" />
+      <geometry>
+        <cylinder radius="${radius0}" length="${height0}" />
+      </geometry>
+    </collision>
+  </link>
+
+  <!-- Primer eslabón -->
+  <!-- La terna 1 está en la entrada del eslabón => DH proximal  -->
+  <link name="link1">
+    <inertial>
+      <origin xyz="${a1/2.0} 0 0" />
+      <mass value="${mass1}" />
+      <inertia ixx="${ixx1}" ixy="0.0" ixz="0.0" iyy="${iyy1}" iyz="0.0" izz="${izz1}" />
+    </inertial>
+    <visual>
+      <origin xyz="${a1/2.0} 0 0" />
+      <geometry>
+        <box size="${length1} ${width1} ${width1}" />
+      </geometry>
+      <material name="blue">
+        <color rgba="0 0 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="${a1/2.0} 0 0" />
+      <geometry>
+        <!-- Collision simplificada/reducida para mejorar estabilidad numérica
+     y evitar self-collisions irrelevantes -->
+        <box size="${length1} ${width1*0.75} ${width1*0.75}" />
+      </geometry>
+    </collision>
+  </link>
+
+  <!-- Segundo eslabón -->
+  <!-- La terna 2 está en la entrada del eslabón => DH proximal  -->
+  <link name="link2">
+    <inertial>
+      <origin xyz="${a2/2.0} 0 0" />
+      <mass value="${mass2}" />
+      <inertia ixx="${ixx2}" ixy="0.0" ixz="0.0" iyy="${iyy2}" iyz="0.0" izz="${izz2}" />
+    </inertial>
+    <visual>
+      <origin xyz="${a2/2.0} 0 0" />
+      <geometry>
+        <box size="${length2} ${width2} ${width2}" />
+      </geometry>
+      <material name="red">
+        <color rgba="1 0 0 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="${a2/2.0} 0 0" />
+      <geometry>
+        <box size="${length2} ${width2} ${width2}" />
+      </geometry>
+    </collision>
+  </link>
+
+  <!--*******************  DEFINICIONES DE JUNTAS  *******************-->
+  <!-- Junta entre base y link1 -->
+  <joint name="joint1" type="revolute">
+    <parent link="base_link" />
+    <child link="link1" />
+    <origin xyz="0 0 ${height0+width1/2.0}" rpy="0 0 0" />
+    <axis xyz="0 0 1" />
+    <limit effort="$(arg tau1_max)" lower="$(arg q1_min)" upper="$(arg q1_max)"
+      velocity="$(arg qp1_max)" />
+    <dynamics damping="$(arg damping1)" friction="$(arg friction1)" />
+  </joint>
+
+  <!-- Junta entre link1 y link2 -->
+  <joint name="joint2" type="revolute">
+    <parent link="link1" />
+    <child link="link2" />
+    <origin xyz="${a1} 0 ${-width1}" rpy="0 0 0" />
+    <axis xyz="0 0 1" />
+    <limit effort="$(arg tau2_max)" lower="$(arg q2_min)" upper="$(arg q2_max)"
+      velocity="$(arg qp2_max)" />
+    <dynamics damping="$(arg damping2)" friction="$(arg friction2)" />
+  </joint>
+
+  <!--*******************  DEFINICIONES DE HERRAMIENTA  *******************-->
+  <!-- Terna TOOL0 en el extremo de link2 -->
+  <joint name="tool0_joint" type="fixed">
+    <parent link="link2" />
+    <child link="tool0" />
+    <origin xyz="${a2} 0 0" rpy="0 0 0" />
+  </joint>
+  <link name="tool0" />
+
+  <!--*******************  CONFIGURACION DE PLUGINS DE GAZEBO  *******************-->
+  <gazebo>
+    <!-- Este plugin se encarga de publicar la información de la IMU en el topic /imu -->
+    <plugin filename="gz-sim-imu-system"
+      name="gz::sim::systems::Imu">
+    </plugin>    
+    <!-- Este plugin publica el estado de las articulaciones -->
+    <plugin filename="gz-sim-joint-state-publisher-system"
+      name="gz::sim::systems::JointStatePublisher">
+    </plugin>
+
+  <!-- Plugins para aplicar fuerzas/torques desde ROS2 a las juntas -->
+    <plugin filename="gz-sim-apply-joint-force-system"
+            name="gz::sim::systems::ApplyJointForce">
+      <joint_name>joint1</joint_name>
+    </plugin>
+    <plugin filename="gz-sim-apply-joint-force-system"
+            name="gz::sim::systems::ApplyJointForce">
+      <joint_name>joint2</joint_name>
+    </plugin>    
+  </gazebo>
+
+  <!--*******************  CONFIGURACION DE COLISIONES *******************-->
+  <!-- Self collision -->
+  <gazebo>
+    <self_collide>true</self_collide>
+  </gazebo>
+
+  <!--*******************  CONFIGURACION DE SENSORES INTERNOS *******************-->
+  <gazebo reference="link2">
+    <sensor name="imu_sensor" type="imu">
+      <always_on>true</always_on>
+      <update_rate>100</update_rate>
+      <visualize>true</visualize>
+      <topic>imu</topic>
+      <imu>
+        <angular_velocity>true</angular_velocity>
+        <linear_acceleration>true</linear_acceleration>
+      </imu>      
+    </sensor>
+  </gazebo>  
+
+</robot>

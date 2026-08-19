@@ -1,0 +1,23 @@
+moveit_controller_manager: moveit_simple_controller_manager/MoveItSimpleControllerManager
+
+moveit_simple_controller_manager:
+  controller_names:
+    - joint_trajectory_controller
+
+  joint_trajectory_controller:
+    action_ns: follow_joint_trajectory
+    type: FollowJointTrajectory
+    default: true
+    joints:
+      - joint1
+      - joint2
+      - joint3
+      - joint4
+      - joint5
+      - joint6
+
+trajectory_execution:
+  allowed_execution_duration_scaling: 3.0
+  allowed_goal_duration_margin: 5.0
+  execution_duration_monitoring: false  # Evita que moveit cancele la ejecución si se excede el tiempo estimado para completar la trayectoria
+  allowed_start_tolerance: 0.05         # Permite que la ejecución comience incluso si el robot no está exactamente en la posición inicial de la trayectoria, lo que puede ser útil para evitar cancelaciones innecesarias.

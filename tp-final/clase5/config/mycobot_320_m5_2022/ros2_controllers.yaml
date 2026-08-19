@@ -1,0 +1,59 @@
+controller_manager:
+  ros__parameters:
+    update_rate: 200 # Hz
+    joint_state_broadcaster:
+      type: joint_state_broadcaster/JointStateBroadcaster
+    joint_trajectory_controller:
+      type: joint_trajectory_controller/JointTrajectoryController
+
+joint_trajectory_controller:
+  ros__parameters:
+    joints:
+      - joint1
+      - joint2
+      - joint3
+      - joint4
+      - joint5
+      - joint6
+    command_interfaces:
+      - effort
+    state_interfaces:
+      - position
+      - velocity
+    gains:
+      joint1:
+        p: 36.0
+        i: 276.0
+        d: 1.95
+        i_clamp_max: 15.0
+        i_clamp_min: -15.0
+      joint2:
+        p: 36.0
+        i: 570.0
+        d: 0.95
+        i_clamp_max: 15.0
+        i_clamp_min: -15.0
+      joint3:
+        p: 36.0
+        i: 570.0
+        d: 0.95
+        i_clamp_max: 15.0
+        i_clamp_min: -15.0
+      joint4:
+        p: 36.0
+        i: 570.0
+        d: 0.95
+        i_clamp_max: 15.0
+        i_clamp_min: -15.0
+      joint5:
+        p: 36.0
+        i: 570.0
+        d: 0.95
+        i_clamp_max: 15.0
+        i_clamp_min: -15.0
+      joint6:
+        p: 36.0
+        i: 570.0
+        d: 0.95
+        i_clamp_max: 15.0
+        i_clamp_min: -15.0
