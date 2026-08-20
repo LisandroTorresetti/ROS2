@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# Mueve el myCobot 320 con pinza en slalom entre los tres pilares que estan
+# Mueve el myCobot 320 con pinza en shalom entre los tres pilares que estan
 # apoyados sobre el escritorio de mundo_escritorio.world, sin tocarlos.
 #
 # Los pilares estan en fila sobre x=-0.22, separados 0.22 en y, con alturas
@@ -12,10 +12,6 @@
 #   4) cruza por encima del pilar alto (su tope esta en z=+0.279)
 #   5) queda sobre el hueco izquierdo
 #
-# El paso 4 es el que importa: de un hueco al otro no se puede ir en linea
-# recta, hay que levantar la muneca por arriba del pilar del medio. Si el
-# planner devuelve una trayectoria que va derecho de (2) a (5), es senal de
-# que la escena no se publico.
 #
 # Uso:
 #   Terminal 1:  ros2 launch clase5 mycobot_launch.py
@@ -57,40 +53,19 @@ PINZA_ABAJO = (1.0, 0.0, 0.0, 0.0)
 # TRAYECTO
 # Cada waypoint es (nombre, x, y, z), en base_link.
 #
-# Los tres pilares estan en fila sobre x=-0.22, en y = +0.16 (alto 0.20),
-# y = -0.06 (alto 0.28) e y = -0.28 (alto 0.12). Entre uno y otro queda un
-# hueco de 0.16 de ancho.
-#
-# El recorrido baja por el hueco de la derecha (y=-0.17), sube, cruza por
-# encima del pilar mas alto (tope en z=+0.279) y termina sobre el hueco de la
-# izquierda (y=+0.05). No hay forma de ir de un hueco al otro sin levantar la
-# muneca por arriba del pilar del medio: eso es lo que fuerza al brazo a
-# moverse alrededor de los obstaculos y no a traves de ellos.
-#
-# Verificado fuera de linea: en cada uno de estos puntos hay entre 16 y 30
-# soluciones de IK distintas con la pinza mirando hacia abajo y todos los
-# eslabones a mas de 15mm de cualquier obstaculo.
 # =====================================================================
 WAYPOINTS = [
-    ('sobre_hueco_der',  -0.22, -0.17, 0.32),   # arriba del hueco derecho
-    ('hueco_derecho',    -0.22, -0.17, 0.12),   # baja entre alta y baja
-    ('salir_der',        -0.22, -0.17, 0.32),   # vuelve a subir
-    ('sobre_la_alta',    -0.22, -0.06, 0.40),   # cruza sobre el pilar alto
-    ('sobre_hueco_izq',  -0.22,  0.05, 0.32),   # queda sobre el hueco izquierdo
+    ('sobre_hueco_der',  -0.22, -0.17, 0.32),
+    ('hueco_derecho',    -0.22, -0.17, 0.12),
+    ('salir_der',        -0.22, -0.17, 0.32),   
+    ('sobre_la_alta',    -0.22, -0.06, 0.40),
+    ('sobre_hueco_izq',  -0.22,  0.05, 0.32),
 ]
 
 
-TOLERANCIA_POS = 0.01    # radio de la esfera de tolerancia, en metros
-
-# Tolerancia angular por eje. El eje z de tool0 es el de aproximacion, asi que
-# x e y son los que realmente fijan "la pinza mira hacia abajo"; el giro
-# ALREDEDOR de ese eje no cambia nada util y dejarlo libre agranda muchisimo el
-# conjunto de estados objetivo. Con 0.10 rad en los tres ejes el objetivo
-# quedaba tan finito que KDL no lograba muestrear ni un estado valido y
-# move_group devolvia FAILURE (99999) sin siquiera empezar a planificar.
-TOLERANCIA_ORI_XY = 0.25    # inclinacion respecto de la vertical
-TOLERANCIA_ORI_Z = 3.15     # giro libre alrededor del eje de aproximacion
-
+TOLERANCIA_POS = 0.01
+TOLERANCIA_ORI_XY = 0.25
+TOLERANCIA_ORI_Z = 3.15
 TIEMPO_PLANIFICACION = 15.0
 INTENTOS = 10
 
@@ -174,9 +149,7 @@ class MoveAcrossDesk(Node):
 
     # -----------------------------------------------------------------
     def esperar_controladores(self, timeout=120.0):
-        """Sin controladores activos el brazo se desploma sobre el escritorio y
-        MoveIt rechaza el plan con START_STATE_IN_COLLISION. Mejor detectarlo
-        aca y decirlo claro que mandar un goal condenado."""
+        """Valida que las precondiciones funcione, en caso de no hacerlo falla"""
         if not self._ctrl_client.wait_for_service(timeout_sec=timeout):
             self.get_logger().error(
                 '/controller_manager/list_controllers no aparece. El plugin '
@@ -336,21 +309,16 @@ class MoveAcrossDesk(Node):
             self.get_logger().info(f'"{nombre}": alcanzado')
             return True
 
-        # Los dos errores que mas aparecen cuando algo esta mal configurado.
+        # Error handler
         if code == -10:
             self.get_logger().error(
-                f'"{nombre}": START_STATE_IN_COLLISION. Suele ser el SRDF sin las '
-                'exclusiones de la pinza, o un obstaculo publicado encima del robot.')
+                f'"{nombre}": START_STATE_IN_COLLISION')
         elif code == -1:
             self.get_logger().error(
-                f'"{nombre}": PLANNING_FAILED. Probar subir '
-                'TIEMPO_PLANIFICACION o alejar el punto de los pilares.')
+                f'"{nombre}": PLANNING_FAILED')
         elif code == 99999:
             self.get_logger().error(
-                f'"{nombre}": FAILURE. Casi siempre es que no se pudo muestrear '
-                'NINGUN estado objetivo: la orientacion pedida es inalcanzable en '
-                'ese punto, o queda tan justa que KDL no converge. Aflojar '
-                'TOLERANCIA_ORI_XY o mover el waypoint.')
+                f'"{nombre}": FAILURE')
         else:
             self.get_logger().error(f'"{nombre}": error_code={code}')
         return False

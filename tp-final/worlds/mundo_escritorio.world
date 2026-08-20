@@ -10,23 +10,6 @@
         <plugin filename="gz-sim-scene-broadcaster-system" name="gz::sim::systems::SceneBroadcaster"> </plugin>
         <!-- Recién ahora podemos hablar de poner un sensor u otro plugin en el SDF! -->
 
-        <!-- Perfil de físicas. El plugin de arriba es el SISTEMA de físicas;
-             esto es el PERFIL, y son cosas distintas. Sin este bloque el
-             max_step_size queda en 0, el reloj de simulación nunca avanza y
-             gz_ros2_control nunca corre su update: el controller_manager
-             levanta pero su executor no gira, así que no contesta ningún
-             servicio y los spawners mueren con
-             "Failed to acquire lock in 20 seconds".
-             El síntoma en el log de Gazebo es:
-             "Desired controller update period (0.005 s) is slower than the
-              gazebo simulation period (0 s)".
-             Con 1 ms de paso, el update_rate de 200 Hz de
-             ros2_controllers.yaml corre una vez cada 5 pasos.
-
-             El atributo type es OBLIGATORIO para SDF (sin el:
-             "Required attribute[type] in element[physics] is not specified").
-             gz-sim igual no lo usa para elegir el motor: eso lo decide el
-             plugin gz-sim-physics-system, que acá resuelve a dartsim. -->
         <physics name="1ms" type="ode">
             <max_step_size>0.001</max_step_size>
             <real_time_factor>1.0</real_time_factor>

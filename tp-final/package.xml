@@ -4,7 +4,7 @@
   <name>clase5</name>
   <version>0.0.0</version>
   <description>Soporte para clase de simulación + control + moveit </description>
-  <maintainer email="pgonzal@fi.uba.ar">pablo</maintainer>
+  <maintainer email="ltorresetti@fi.uba.ar">NUA</maintainer>
   <license>Apache-2.0</license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
@@ -18,8 +18,6 @@
   <exec_depend>shape_msgs</exec_depend>
   <exec_depend>std_msgs</exec_depend>
 
-  <!-- Capa de control: sin gz_ros2_control no existe el controller_manager y
-       MoveIt puede planificar pero no ejecutar. -->
   <exec_depend>gz_ros2_control</exec_depend>
   <exec_depend>controller_manager</exec_depend>
   <exec_depend>controller_manager_msgs</exec_depend>
