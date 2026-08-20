@@ -45,3 +45,5 @@ source install/setup.bash
 ## Demo
 
 ![Resultado](demo/demo-robot-movement-x2.gif)
+
+**OBS:** para ver el GIF, ir al [README](https://github.com/LisandroTorresetti/ROS2/blob/tp-final/tp-final/README.md) en Github
