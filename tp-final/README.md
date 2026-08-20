@@ -62,3 +62,12 @@ ros2 run clase5 gui_apply_torque.py
 - Correr la simulación y ver cómo se cae el cobot y queda colgando el pobrecito
 
 ![Simulación del cobot](docs/simu_mycobot.png)
+
+
+# Video Reference
+
+<!-- Or embed it as a clickable thumbnail if your Markdown renderer supports HTML -->
+
+## Robot Movement Demo
+
+![Resultado](demo/demo-robot-movement-x2.gif)
